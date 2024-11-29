@@ -1,6 +1,6 @@
 const personaContainer = document.getElementById("personaContainer");
 
-fetch("http://persona-compendium.onrender.com/personas/", {
+fetch("https://persona-compendium.onrender.com/personas/", {
     method: 'GET'
 })
 .then(result => result.json())
