@@ -1,72 +1,158 @@
+:root {
+    --card-height: 300px;
+    --card-width: calc(var(--card-height) / 1.5);
+}
+
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Teko';
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 #personaContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto;
-    grid-row-gap: 3px;
-    border: solid 5px whitesmoke;
-    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-bottom: 3%;
+    padding: 1%;
+    gap: 1%;
+    max-height: 70vh;
+    min-height: 70vh;
+    width: 90vw;
+    border: solid 5px black;
 }
-
-.personaCard {
-    display: block;
-    width: 270px;
-    height: 380px;
-    perspective: 1000px;
-}
-
-.cardInner {
+.card {
+    width: var(--card-width);
+    height: var(--card-height);
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 0 36px;
+    perspective: 2500px;
+    cursor: pointer;
+    margin-bottom: 1%;
+}
+  
+.cover-image {
     width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    height: 280px;
+    transition: all 0.2s;
 }
 
-.personaCard:hover .cardInner {
-    transform: rotateY(180deg);
+.cardBackground {
+    width: 100%;
+    height: 280px;
+    background-image: url(../img/background.gif);
+    background-size: cover;
+    background-position: center;
+    position: absolute; 
+    filter: grayscale(70%);
+    filter: blur(8px);
+    top: 0%;
+    z-index: -2;
 }
-
-.cardFront, .cardBack {
+  
+.wrapper {
+    transition: all 0.5s;
     position: absolute;
     width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    background-image: url(../img/cardback.webp);
-    background-size: contain;
-    background-position: center;
-}
-
-.cardFront {
-    align-items: center;
-}
-
-.cardFront > img{
-    width: 236px;
-    height: 347px;
-    margin-top: 6%;
-    border: none;
+    z-index: -1;
+    border: 7px outset rgb(225, 182, 0);
     background-color: black;
 }
-
-.cardFront > h1 {
-    position: relative;
-    bottom: 9%;
-    left: 6.5%;
-    color: white;
-    font-size: larger;
-    background-color: rgba(255, 255, 255, 0.478);
-    padding: 1%;
-    width: 85%;
+  
+.card:hover .wrapper {
+    transform: perspective(900px) translateY(-5%) rotateX(25deg) translateZ(0);
+    box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 2px 35px 32px -8px rgba(0, 0, 0, 0.75);
+}
+  
+.wrapper::before,
+.wrapper::after {
+    content: "";
+    opacity: 0;
+    width: 100%;
+    height: 80px;
+    transition: all 0.5s;
+    position: absolute;
+    left: 0;
+ }
+ .wrapper::before {
+    top: 0;
+    height: 100%;
+    background-image: linear-gradient(
+      to top,
+      transparent 46%,
+      rgba(12, 13, 19, 0.5) 68%,
+      rgba(12, 13, 19) 97%
+    );
+ }
+ .wrapper::after {
+    bottom: 0;
+    opacity: 1;
+    background-image: linear-gradient(
+      to bottom,
+      transparent 46%,
+      rgba(12, 13, 19, 0.5) 68%,
+      rgba(12, 13, 19) 97%
+    );
+}
+  
+.card:hover .wrapper::before,
+.wrapper::after {
+    opacity: 1;
 }
 
-.cardBack {
-    transform: rotateY(180deg);
+.card:hover > .wrapper > .cover-image {
+    filter: brightness(0%);
+}
+
+
+  
+.card:hover .wrapper::after {
+    height: 120px;
+}
+.title {
+    width: 100%;
+    font-size: x-large;
+    margin-bottom: 5px;
+    text-align: center;
+    color: white;
+    transition: transform 0.5s;
+    text-shadow: 0 0 15px rgb(0, 0, 109);
+}
+.card:hover .title {
+    transform: translate3d(0%, -35px, 100px);
+}
+  
+.character {
+    width: 100%;
+    height: 280px;
+    opacity: 0;
+    transition: all 0.5s;
+    position: absolute;
+    z-index: -1;
+    filter: drop-shadow(0px 0px 10px rgb(0, 140, 255));
+}
+  
+.card:hover .character {
+    opacity: 1;
+    transform: translate3d(0%, -30%, 100px);
+}
+
+#pageSelector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: auto;
 }
