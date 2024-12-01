@@ -2,9 +2,19 @@ const personaContainer = document.getElementById("personaContainer");
 const previous = document.getElementById("previous");
 const next = document.getElementById("next");
 const pageNumbers = document.getElementById("pageNumbers");
+const hoverSound = document.getElementById('hoverSound');
+const personaHoverSound = document.getElementById('personaHoverSound');
+const invalidSound = document.getElementById('invalidSound');
+const nextPageSound = document.getElementById('nextPageSound');
+const backgroundMusic = document.getElementById('backgroundMusic');
 let personaSizeStart = 0;
 let personaSizeEnd = 13;
 let totalOfPersonas = 213;
+
+backgroundMusic.volume = 0.2;
+hoverSound.volume = 0.5;
+invalidSound.volume = 0.5;
+personaHoverSound.volume = 0.1;
 
 previous.addEventListener("click", () => {
     if (personaSizeStart > 0) {
@@ -15,7 +25,20 @@ previous.addEventListener("click", () => {
         personaSizeEnd -= 14;
         pageNumbers.innerText = (personaSizeStart + 1) + " - " + (personaSizeEnd + 1);
         obtainPersonas();
+        nextPageSound.currentTime = 0;
+        nextPageSound.play();
+    }else{
+        invalidSound.play();
+        previous.setAttribute("invalid","true");
+        setTimeout(() => {
+            previous.removeAttribute("invalid");
+        }, 200);
     }
+})
+
+previous.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
 })
 
 next.addEventListener("click", () => {
@@ -27,7 +50,20 @@ next.addEventListener("click", () => {
         }
         pageNumbers.innerText = (personaSizeStart + 1) + " - " + (personaSizeEnd + 1);
         obtainPersonas();
+        nextPageSound.currentTime = 0;
+        nextPageSound.play();
+    }else{
+        invalidSound.play();
+        next.setAttribute("invalid","true");
+        setTimeout(() => {
+            next.removeAttribute("invalid");
+        }, 200);
     }
+})
+
+next.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
 })
 
 obtainPersonas();
@@ -107,6 +143,11 @@ function createPersona(persona){
     character.setAttribute("class","character");
 
     personaCard.appendChild(character);
+
+    personaCard.addEventListener("mouseenter", () => {
+        personaHoverSound.currentTime = 0;
+        personaHoverSound.play();
+    })
 
     personaContainer.appendChild(personaCard);
 }
