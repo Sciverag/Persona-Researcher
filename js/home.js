@@ -69,7 +69,7 @@ next.addEventListener("mouseenter", () => {
 obtainPersonas();
 
 function obtainPersonas(){
-    fetch("http://persona-compendium.onrender.com/personas/", {
+    fetch("https://persona-compendium.onrender.com/personas/", {
         method: 'GET'
     })
     .then(result => result.json())
