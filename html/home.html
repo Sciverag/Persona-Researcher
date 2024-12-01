@@ -14,18 +14,11 @@
 <body>
 
     <div id="personaContainer">
-        <div class="card">
-            <div class="wrapper">
-                <img class="cover-image"/>
-                <div class="cardBackground"></div>
-            </div>
-            <h1 class="title">Persona Name</h1>
-            <img class="character"/>
-        </div>
+        <div id="loader"></div>
     </div>
     <div id="pageSelector">
         <button id="previous"><span class="material-symbols-outlined">arrow_left</span></button>
-        <h2 id="pageNumbers">1 - 14</h2>
+        <h2 id="pageNumbers"> 0 </h2>
         <button id="next"><span class="material-symbols-outlined">arrow_right</span></button>
     </div>
 
@@ -37,13 +30,20 @@
         <div class='air air3'></div>
         <div class='air air4'></div>
     </section>
+
+    <button id="toggleSound">
+        <span id="volumeIcon" class="material-symbols-outlined">
+            volume_off
+        </span>
+    </button>
+
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="../audio/background.mp3" type="audio/mp3"></source>
+    </audio>
     <audio id="hoverSound" src="../audio/hover.wav" preload="auto"></audio>
     <audio id="invalidSound" src="../audio/invalid.wav" preload="auto"></audio>
     <audio id="nextPageSound" src="../audio/nextpage.wav" preload="auto"></audio>
     <audio id="personaHoverSound" src="../audio/personaHover.wav" preload="auto"></audio>
-    <audio id="backgroundMusic" autoplay loop>
-        <source src="../audio/background.mp3" type="audio/mp3"></source>
-    </audio>
     <script src="../js/home.js"></script>
 </body>
 </html>

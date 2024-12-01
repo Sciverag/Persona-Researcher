@@ -2,23 +2,63 @@ const personaContainer = document.getElementById("personaContainer");
 const previous = document.getElementById("previous");
 const next = document.getElementById("next");
 const pageNumbers = document.getElementById("pageNumbers");
+const toggleSound = document.getElementById("toggleSound");
 const hoverSound = document.getElementById('hoverSound');
 const personaHoverSound = document.getElementById('personaHoverSound');
 const invalidSound = document.getElementById('invalidSound');
 const nextPageSound = document.getElementById('nextPageSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
+const loader = document.createElement("div");
+let personaList;
+let personasLoaded = false;
+let soundEnabled = false;
+loader.setAttribute("id","loader");
+
 let personaSizeStart = 0;
 let personaSizeEnd = 13;
-let totalOfPersonas = 213;
+let totalOfPersonas;
 
-backgroundMusic.volume = 0.2;
-hoverSound.volume = 0.5;
-invalidSound.volume = 0.5;
-personaHoverSound.volume = 0.1;
+fetch("https://persona-compendium.onrender.com/personas/", {
+    method: 'GET'
+})
+.then(result => result.json())
+.then(data => assignPersonas(data))
+.catch(error => console.error(error));
+
+backgroundMusic.volume = 0;
+hoverSound.volume = 0;
+invalidSound.volume = 0;
+personaHoverSound.volume = 0;
+nextPageSound.volume = 0;
+
+toggleSound.addEventListener("click", () => {
+    soundEnabled = !soundEnabled;
+    const volumeIcon = document.getElementById("volumeIcon");
+
+    if (soundEnabled) {
+        backgroundMusic.play();
+        backgroundMusic.volume = 0.2;
+        hoverSound.volume = 0.5;
+        invalidSound.volume = 0.5;
+        personaHoverSound.volume = 0.1;
+        nextPageSound.volume = 0.2;
+        volumeIcon.innerText = "volume_up";
+        toggleSound.setAttribute("active","");
+    } else {
+        backgroundMusic.volume = 0;
+        hoverSound.volume = 0;
+        invalidSound.volume = 0;
+        personaHoverSound.volume = 0;
+        nextPageSound.volume = 0;
+        volumeIcon.innerText = "volume_off";
+        toggleSound.removeAttribute("active");
+    }
+});
+
 
 previous.addEventListener("click", () => {
-    if (personaSizeStart > 0) {
-        if(personaSizeEnd == totalOfPersonas){
+    if (personaSizeStart > 0 && personasLoaded) {
+        if(personaSizeEnd == totalOfPersonas - 1){
             personaSizeEnd = personaSizeStart + 13;
         }
         personaSizeStart -= 14;
@@ -42,11 +82,11 @@ previous.addEventListener("mouseenter", () => {
 })
 
 next.addEventListener("click", () => {
-    if (personaSizeStart < totalOfPersonas - 13) {
+    if (personaSizeStart < totalOfPersonas - 13 && personasLoaded) {
         personaSizeStart += 14;
         personaSizeEnd += 14;
-        if(personaSizeEnd > totalOfPersonas){
-            personaSizeEnd = totalOfPersonas;
+        if(personaSizeEnd >= totalOfPersonas){
+            personaSizeEnd = totalOfPersonas -1;
         }
         pageNumbers.innerText = (personaSizeStart + 1) + " - " + (personaSizeEnd + 1);
         obtainPersonas();
@@ -66,15 +106,18 @@ next.addEventListener("mouseenter", () => {
     hoverSound.play();
 })
 
-obtainPersonas();
+function assignPersonas(data){
+    personaList = data;
+    totalOfPersonas = personaList.length;
+    personasLoaded = true;
+    pageNumbers.innerText = 1 + " - " + 14;
+    obtainPersonas();
+}
 
 function obtainPersonas(){
-    fetch("http://persona-compendium.onrender.com/personas/", {
-        method: 'GET'
-    })
-    .then(result => result.json())
-    .then(data => displayPersonas(data))
-    .catch(error => console.error(error))
+    personaContainer.innerHTML = "";
+    personaContainer.appendChild(loader);
+    displayPersonas(personaList);
 }
 
 function displayPersonas(personas){
