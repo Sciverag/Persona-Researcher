@@ -3,25 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../favicon.jpg" type="image/jpg">
     <title>Persona Researcher</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Teko:wght@300..700&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
 
     <div id="personaContainer">
-        <div class="personaCard">
-            <div class="cardInner">
-                <div class="cardFront">
-                    <img>
-                    <h1>Persona Name</h1>
-                </div>
-                <div class="cardBack">
-                    <button>Info</button>
-                </div>
+        <div class="card">
+            <div class="wrapper">
+                <img class="cover-image"/>
+                <div class="cardBackground"></div>
             </div>
+            <h1 class="title">Persona Name</h1>
+            <img class="character"/>
         </div>
     </div>
+    <div id="pageSelector">
+        <button id="previous"><span class="material-symbols-outlined">arrow_left</span></button>
+        <h2 id="pageNumbers">1 - 14</h2>
+        <button id="next"><span class="material-symbols-outlined">arrow_right</span></button>
+    </div>
+
+
     
+    <section>
+        <div class='air air1'></div>
+        <div class='air air2'></div>
+        <div class='air air3'></div>
+        <div class='air air4'></div>
+    </section>
+    <audio id="hoverSound" src="../audio/hover.wav" preload="auto"></audio>
+    <audio id="invalidSound" src="../audio/invalid.wav" preload="auto"></audio>
+    <audio id="nextPageSound" src="../audio/nextpage.wav" preload="auto"></audio>
+    <audio id="personaHoverSound" src="../audio/personaHover.wav" preload="auto"></audio>
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="../audio/background.mp3" type="audio/mp3"></source>
+    </audio>
     <script src="../js/home.js"></script>
 </body>
 </html>
