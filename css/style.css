@@ -35,6 +35,30 @@ body {
   filter: drop-shadow(0px 0px 10px rgb(0, 0, 109));
 }
 
+#nameSearcher {
+  position: fixed;
+  top: 3%;
+  width: 50%;
+  left: 25%;
+  right: 25%;
+  z-index: 0;
+  border: solid 5px blue;
+  font-size: x-large;
+  border-radius: 20px;
+  text-align: center;
+  transition: all 0.2s;
+  box-shadow: 0px 0px 10px rgb(0, 0, 109);
+}
+
+#nameSearcher:hover {
+  scale: 102%;
+  color: blue;
+}
+
+#nameSearcher:focus {
+  outline: none;
+}
+
 #arcanaSelector > *:not(#central) {
   width: 100px;
   height: 100px;
@@ -197,6 +221,7 @@ section{
     background-color: rgba(0, 17, 255, 0.575);
     border-radius: 15px;
     box-shadow: inset 0px 0px 15px rgb(0, 2, 128);
+    color: whitesmoke;
 }
 
 #pageSelector {
@@ -231,7 +256,18 @@ section{
 
 button[invalid]{
   background-color: red !important;
-  transform: translateX(-2%);
+  animation: invalidAnim 0.2s linear;
+}
+
+h1[invalid]{
+  color: red;
+  animation: invalidAnim 0.2s linear;
+}
+
+@keyframes invalidAnim {
+  0%{transform: translateX(-2%);}
+  50%{transform: translateX(2%);}
+  100%{transform: translateX(0%);}
 }
 
 #pageSelector > button:active {
@@ -264,6 +300,19 @@ button[invalid]{
     perspective: 2500px;
     cursor: pointer;
     margin-bottom: 1%;
+    transition: all 0.5s;
+    animation: cardSpawn 0.1s linear;
+}
+
+@keyframes cardSpawn {
+  0% {
+    scale: 125%;
+    transform: translateX(-20px);
+  }
+  100% {
+    scale: 100%;
+    transform: translateX(0px);
+  }
 }
   
 .cover-image {
@@ -436,4 +485,17 @@ button[invalid]{
 @keyframes reverseSpin {
   0% { transform: rotate(360deg); }
   100% { transform: rotate(0deg); }
+}
+
+@media (max-width: 1200px) {
+  #nameSearcher {
+    z-index: 2;
+  }
+}
+
+@media (max-width: 780px) {
+  #nameSearcher {
+    right: auto;
+    left: 0;
+  }
 }

@@ -5,10 +5,12 @@ const pageNumbers = document.getElementById("pageNumbers");
 const toggleSound = document.getElementById("toggleSound");
 const arcanaText = document.getElementById("arcana");
 const arcanaButton = document.getElementById("central");
+const nameSearcher = document.getElementById("nameSearcher");
 const hoverSound = document.getElementById('hoverSound');
 const personaHoverSound = document.getElementById('personaHoverSound');
 const invalidSound = document.getElementById('invalidSound');
 const nextPageSound = document.getElementById('nextPageSound');
+const arcanaSound = document.getElementById('arcanaSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const loader = document.createElement("div");
 let personaList;
@@ -17,11 +19,18 @@ let arcanaList = ['All','Fool','Magician','Priestess','Empress','Emperor','Hiero
 let currentArcanaID = 0;
 let personasLoaded = false;
 let soundEnabled = false;
+let firstSearched = false;
 loader.setAttribute("id","loader");
 
 let personaSizeStart = 0;
 let personaSizeEnd = 13;
 let totalOfPersonas;
+
+if(localStorage.getItem("PersonaName")){
+    nameSearcher.value = localStorage.getItem("PersonaName");
+}else{
+    localStorage.setItem("PersonaName","");
+}
 
 fetch("https://persona-compendium.onrender.com/personas/", {
     method: 'GET'
@@ -47,6 +56,7 @@ toggleSound.addEventListener("click", () => {
         invalidSound.volume = 0.5;
         personaHoverSound.volume = 0.1;
         nextPageSound.volume = 0.2;
+        arcanaSound.volume = 0.2;
         volumeIcon.innerText = "volume_up";
         toggleSound.setAttribute("active","");
     } else {
@@ -55,14 +65,21 @@ toggleSound.addEventListener("click", () => {
         invalidSound.volume = 0;
         personaHoverSound.volume = 0;
         nextPageSound.volume = 0;
+        arcanaSound.volume = 0;
         volumeIcon.innerText = "volume_off";
         toggleSound.removeAttribute("active");
     }
 });
 
+toggleSound.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+});
+
 
 previous.addEventListener("click", () => {
     if (personaSizeStart > 0 && personasLoaded) {
+        firstSearched = false;
         if(personaSizeEnd == totalOfPersonas - 1){
             personaSizeEnd = personaSizeStart + 13;
         }
@@ -73,6 +90,7 @@ previous.addEventListener("click", () => {
         nextPageSound.currentTime = 0;
         nextPageSound.play();
     }else{
+        invalidSound.currentTime = 0;
         invalidSound.play();
         previous.setAttribute("invalid","true");
         setTimeout(() => {
@@ -88,6 +106,7 @@ previous.addEventListener("mouseenter", () => {
 
 next.addEventListener("click", () => {
     if (personaSizeStart < totalOfPersonas - 13 && personasLoaded) {
+        firstSearched = false;
         personaSizeStart += 14;
         personaSizeEnd += 14;
         if(personaSizeEnd >= totalOfPersonas){
@@ -98,6 +117,7 @@ next.addEventListener("click", () => {
         nextPageSound.currentTime = 0;
         nextPageSound.play();
     }else{
+        invalidSound.currentTime = 0;
         invalidSound.play();
         next.setAttribute("invalid","true");
         setTimeout(() => {
@@ -109,31 +129,99 @@ next.addEventListener("click", () => {
 next.addEventListener("mouseenter", () => {
     hoverSound.currentTime = 0;
     hoverSound.play();
+});
+
+arcanaButton.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
 })
 
 arcanaButton.addEventListener("click", () => {
-    if(currentArcanaID == arcanaList.length - 1){
-        currentArcanaID = 0;
+    if(personasLoaded){
+        if(currentArcanaID == arcanaList.length - 1){
+            currentArcanaID = 0;
+        }else{
+            currentArcanaID++;
+        }
+    
+        arcanaButton.setAttribute("pressed","");
+        arcanaSound.currentTime = 0;
+        arcanaSound.play();
+        setTimeout(() => {
+            arcanaText.innerText = arcanaList[currentArcanaID];
+        }, 500);
+        setTimeout(() => {
+            arcanaButton.removeAttribute("pressed");
+            filterByArcana();
+        }, 1000);
     }else{
-        currentArcanaID++;
-
+        invalidSound.currentTime = 0;
+        invalidSound.play();
+        arcanaButton.setAttribute("invalid","true");
+        setTimeout(() => {
+            arcanaButton.removeAttribute("invalid");
+        }, 200);
     }
-
-    arcanaButton.setAttribute("pressed","");
-    setTimeout(() => {
-        arcanaText.innerText = arcanaList[currentArcanaID];
-        arcanaButton.removeAttribute("pressed");
-    }, 1000);
-    filterByArcana();
 });
+
+nameSearcher.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+})
+
+nameSearcher.addEventListener("change", () => {
+    if(personasLoaded){
+        firstSearched = true;
+        localStorage.setItem("PersonaName",nameSearcher.value);
+        filterByName();
+    }else{
+        invalidSound.currentTime = 0;
+        invalidSound.play();
+        nameSearcher.value = "";
+    }
+});
+
+nameSearcher
 
 function assignPersonas(data){
     originalPersonaList = data;
+    originalPersonaList.sort((a, b) => {
+        if (a.name < b.name) {
+            return -1; 
+        }
+        if (a.name > b.name) {
+            return 1; 
+        }
+        return 0; 
+    });
     personaList = originalPersonaList;
     totalOfPersonas = personaList.length;
     personasLoaded = true;
     pageNumbers.innerText = 1 + " - " + 14;
     obtainPersonas();
+}
+
+function filterByName(){
+    let name = localStorage.getItem("PersonaName").toLowerCase();
+    let filteredList = personaList.filter(persona => {
+        return persona.name.toLowerCase().includes(name);
+    });
+    if(firstSearched){
+        personaSizeStart = 0;
+        if(filteredList.length < 14){
+            personaSizeEnd = filteredList.length - 1;
+        }else{
+            personaSizeEnd = 13;
+        }
+    }else{
+        if(filteredList.length < 14){
+            personaSizeEnd = filteredList.length - 1;
+        }
+    }
+    
+    totalOfPersonas = filteredList.length;
+    pageNumbers.innerText = (personaSizeStart + 1) + " - " + (personaSizeEnd + 1);
+    displayPersonas(filteredList);
 }
 
 function filterByArcana(){
@@ -162,19 +250,28 @@ function filterByArcana(){
 function obtainPersonas(){
     personaContainer.innerHTML = "";
     personaContainer.appendChild(loader);
-    displayPersonas(personaList);
+    if(localStorage.getItem("PersonaName")){
+        filterByName();
+    }else{
+        displayPersonas(personaList);
+    }
 }
 
 function displayPersonas(personas){
-    personaContainer.innerHTML = "";
-    for(let i = personaSizeStart; i <= personaSizeEnd; i++){
-        createPersona(personas[i]);
+    if(personas.length == 0){
+        personaContainer.innerHTML = "<h1 invalid>There is no Persona whith that name!</h1>";
+        invalidSound.currentTime = 0;
+        invalidSound.play();
+    }else{
+        personaContainer.innerHTML = "";
+        for(let i = personaSizeStart; i <= personaSizeEnd; i++){
+            createPersona(personas[i]);
+        }
     }
 }
 
 function createPersona(persona){
     //Some personas from the API doesn't have images, so this first part of the code fixes that
-    console.log(persona);
     if(persona.name == 'Hermes'){
         persona.image = "https://megatenwiki.com/images/thumb/d/d4/P3_Hermes_Artwork.png/300px-P3_Hermes_Artwork.png";
     }
