@@ -3,6 +3,8 @@ const previous = document.getElementById("previous");
 const next = document.getElementById("next");
 const pageNumbers = document.getElementById("pageNumbers");
 const toggleSound = document.getElementById("toggleSound");
+const arcanaText = document.getElementById("arcana");
+const arcanaButton = document.getElementById("central");
 const hoverSound = document.getElementById('hoverSound');
 const personaHoverSound = document.getElementById('personaHoverSound');
 const invalidSound = document.getElementById('invalidSound');
@@ -10,6 +12,9 @@ const nextPageSound = document.getElementById('nextPageSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const loader = document.createElement("div");
 let personaList;
+let originalPersonaList;
+let arcanaList = ['All','Fool','Magician','Priestess','Empress','Emperor','Hierophant','Lovers','Chariot','Justice','Hermit','Fortune','Strength','Hanged','Death','Temperance','Devil','Tower','Star','Moon','Sun','Judgement','Aeon'];
+let currentArcanaID = 0;
 let personasLoaded = false;
 let soundEnabled = false;
 loader.setAttribute("id","loader");
@@ -106,11 +111,51 @@ next.addEventListener("mouseenter", () => {
     hoverSound.play();
 })
 
+arcanaButton.addEventListener("click", () => {
+    if(currentArcanaID == arcanaList.length - 1){
+        currentArcanaID = 0;
+    }else{
+        currentArcanaID++;
+
+    }
+
+    arcanaButton.setAttribute("pressed","");
+    setTimeout(() => {
+        arcanaText.innerText = arcanaList[currentArcanaID];
+        arcanaButton.removeAttribute("pressed");
+    }, 1000);
+    filterByArcana();
+});
+
 function assignPersonas(data){
-    personaList = data;
+    originalPersonaList = data;
+    personaList = originalPersonaList;
     totalOfPersonas = personaList.length;
     personasLoaded = true;
     pageNumbers.innerText = 1 + " - " + 14;
+    obtainPersonas();
+}
+
+function filterByArcana(){
+    if(currentArcanaID != 0){
+        personaList = new Array(0);
+        personaSizeStart = 0;
+        originalPersonaList.forEach(persona => {
+            if(persona.arcana == arcanaList[currentArcanaID]){
+                personaList.push(persona);
+            }
+        });
+        personaSizeEnd = personaList.length - 1;
+        totalOfPersonas = personaList.length;
+    }else{
+        personaList = originalPersonaList;
+        personaSizeStart = 0;
+        personaSizeEnd = 13;
+        totalOfPersonas = personaList.length;
+    }
+
+    pageNumbers.innerText = (personaSizeStart + 1) + " - " + (personaSizeEnd + 1);
+    
     obtainPersonas();
 }
 
@@ -129,6 +174,7 @@ function displayPersonas(personas){
 
 function createPersona(persona){
     //Some personas from the API doesn't have images, so this first part of the code fixes that
+    console.log(persona);
     if(persona.name == 'Hermes'){
         persona.image = "https://megatenwiki.com/images/thumb/d/d4/P3_Hermes_Artwork.png/300px-P3_Hermes_Artwork.png";
     }
