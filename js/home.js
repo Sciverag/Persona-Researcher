@@ -14,8 +14,9 @@ const arcanaSound = document.getElementById('arcanaSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const loader = document.createElement("div");
 let personaList;
+let favoritePersonas = new Array(0);
 let originalPersonaList;
-let arcanaList = ['All','Fool','Magician','Priestess','Empress','Emperor','Hierophant','Lovers','Chariot','Justice','Hermit','Fortune','Strength','Hanged','Death','Temperance','Devil','Tower','Star','Moon','Sun','Judgement','Aeon'];
+let arcanaList = ['ALL','Fool','Magician','Priestess','Empress','Emperor','Hierophant','Lovers','Chariot','Justice','Hermit','Fortune','Strength','Hanged','Death','Temperance','Devil','Tower','Star','Moon','Sun','Judgement','Aeon','DLC','FAVORITE'];
 let currentArcanaID = 0;
 let personasLoaded = false;
 let soundEnabled = false;
@@ -26,10 +27,18 @@ let personaSizeStart = 0;
 let personaSizeEnd = 13;
 let totalOfPersonas;
 
+localStorage.removeItem("SelectedPersona");
+
 if(localStorage.getItem("PersonaName")){
     nameSearcher.value = localStorage.getItem("PersonaName");
 }else{
     localStorage.setItem("PersonaName","");
+}
+
+if(localStorage.getItem("FavoritePersonas")){
+    favoritePersonas = JSON.parse(localStorage.getItem("FavoritePersonas"));
+}else{
+    localStorage.setItem("FavoritePersonas",JSON.stringify([]));
 }
 
 fetch("https://persona-compendium.onrender.com/personas/", {
@@ -44,6 +53,7 @@ hoverSound.volume = 0;
 invalidSound.volume = 0;
 personaHoverSound.volume = 0;
 nextPageSound.volume = 0;
+arcanaSound.volume = 0;
 
 toggleSound.addEventListener("click", () => {
     soundEnabled = !soundEnabled;
@@ -228,12 +238,36 @@ function filterByArcana(){
     if(currentArcanaID != 0){
         personaList = new Array(0);
         personaSizeStart = 0;
-        originalPersonaList.forEach(persona => {
-            if(persona.arcana == arcanaList[currentArcanaID]){
-                personaList.push(persona);
+        if(arcanaList[currentArcanaID] != "DLC" && arcanaList[currentArcanaID] != "FAVORITE"){
+            originalPersonaList.forEach(persona => {
+                if(persona.arcana == arcanaList[currentArcanaID]){
+                    personaList.push(persona);
+                }
+            });
+            personaSizeEnd = personaList.length - 1;
+        }else{
+            if(arcanaList[currentArcanaID] == "DLC"){
+                originalPersonaList.forEach(persona => {
+                    if(persona.dlc == 1){
+                        personaList.push(persona);
+                    }
+                });
+            }else{
+                if(favoritePersonas.length > 0){
+                    originalPersonaList.forEach(persona => {
+                        if(favoritePersonas.includes(persona.id)){
+                            personaList.push(persona);
+                        }
+                    });
+                }
             }
-        });
-        personaSizeEnd = personaList.length - 1;
+
+            if(personaList.length < 14){
+                personaSizeEnd = personaList.length - 1;
+            }else{
+                personaSizeEnd = 13;
+            }
+        }
         totalOfPersonas = personaList.length;
     }else{
         personaList = originalPersonaList;
@@ -259,7 +293,11 @@ function obtainPersonas(){
 
 function displayPersonas(personas){
     if(personas.length == 0){
-        personaContainer.innerHTML = "<h1 invalid>There is no Persona whith that name!</h1>";
+        if(favoritePersonas.length == 0){
+            personaContainer.innerHTML = "<h1 invalid>You don't have favorite Personas!</h1>";
+        }else{
+            personaContainer.innerHTML = "<h1 invalid>There is no Persona whith that name!</h1>";
+        }
         invalidSound.currentTime = 0;
         invalidSound.play();
     }else{
@@ -333,6 +371,11 @@ function createPersona(persona){
     personaCard.addEventListener("mouseenter", () => {
         personaHoverSound.currentTime = 0;
         personaHoverSound.play();
+    })
+
+    personaCard.addEventListener("click", () => {
+        localStorage.setItem("SelectedPersona",persona.query);
+        window.location.href = "persona.html";
     })
 
     personaContainer.appendChild(personaCard);
