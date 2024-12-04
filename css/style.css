@@ -52,11 +52,12 @@ body {
 
 #nameSearcher:hover {
   scale: 102%;
-  color: blue;
 }
 
 #nameSearcher:focus {
   outline: none;
+  color: blue;
+  scale: 102%;
 }
 
 #arcanaSelector > *:not(#central) {
