@@ -24,6 +24,10 @@ body {
     z-index: 1;
 }
 
+#arcana {
+  rotate: -15deg;
+}
+
 #arcanaSelector {
   position: fixed;
   display: grid;
