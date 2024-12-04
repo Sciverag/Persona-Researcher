@@ -19,11 +19,33 @@
         <div class='air air4'></div>
     </section>
 
+    <div id="nameContainer">
+        <div>
+            <p>ARCANA</p>
+            <h1 id="arcanaText"></h1>
+            <h2 id="nameText"></h2>
+        </div>
+        <h1 id="level">LV</h1>
+    </div>
+
+    <div id="nameDecoration">
+
+    </div>
+
     <button id="toggleSound">
         <span id="volumeIcon" class="material-symbols-outlined">
             volume_off
         </span>
     </button>
+
+    <a href="home.html" id="backHome">
+        <span class="material-symbols-outlined">
+            home
+        </span>
+    </a>
+
+    <img id="cardTransition" class="fromPersona" src="../img/cardback.webp">
+    <div id="backTransition" class="fromPersona"></div>
 
     <audio id="backgroundMusic" autoplay loop>
         <source src="../audio/background.mp3" type="audio/mp3"></source>
@@ -33,5 +55,7 @@
     <audio id="nextPageSound" src="../audio/nextpage.wav" preload="auto"></audio>
     <audio id="personaHoverSound" src="../audio/personaHover.wav" preload="auto"></audio>
     <audio id="arcanaSound" src="../audio/nextArcana.wav" preload="auto"></audio>
+
+    <script src="../js/persona.js"></script>
 </body>
 </html>

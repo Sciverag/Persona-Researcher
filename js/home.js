@@ -13,6 +13,8 @@ const nextPageSound = document.getElementById('nextPageSound');
 const arcanaSound = document.getElementById('arcanaSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const loader = document.createElement("div");
+const cardTransition = document.getElementById("cardTransition");
+const backTransition = document.getElementById("backTransition");
 let personaList;
 let favoritePersonas = new Array(0);
 let originalPersonaList;
@@ -375,7 +377,11 @@ function createPersona(persona){
 
     personaCard.addEventListener("click", () => {
         localStorage.setItem("SelectedPersona",persona.query);
-        window.location.href = "persona.html";
+        cardTransition.style.display = "block";
+        backTransition.style.display = "block";
+        setTimeout(() => {
+            window.location.href = "persona.html";
+        }, 2000)
     })
 
     personaContainer.appendChild(personaCard);

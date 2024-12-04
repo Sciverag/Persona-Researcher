@@ -22,6 +22,7 @@ body {
     flex-direction: column;
     background: rgba(31, 72, 255, 0.877);
     z-index: 1;
+    overflow-x: hidden;
 }
 
 #arcana {
@@ -439,6 +440,7 @@ h1[invalid]{
   border-radius: 50%;
   width: 120px;
   height: 120px;
+  margin: auto;
   animation: spin 1.5s linear infinite;
 }
 
@@ -503,4 +505,170 @@ h1[invalid]{
     right: auto;
     left: 0;
   }
+}
+
+.fromPersona {
+  animation-direction: reverse !important;
+}
+
+#cardTransition {
+  position: fixed;
+  display: none;
+  height: 100vh;
+  right: 0;
+  z-index: 10;
+  animation: pageTransition 2s ease-in-out;
+  box-shadow: 0px 0px 20px rgb(0, 0, 109);
+}
+
+#backTransition {
+  position: fixed;
+  display: none;
+  background-color: rgb(0, 0, 109);
+  width: 100vw;
+  height: 100vh;
+  right: 0;
+  z-index: 9;
+  animation: backTransition 2s ease-in-out;
+}
+
+@keyframes pageTransition {
+  0% {
+    transform: translateX(0) translateY(100%);
+    rotate: 30deg;
+  }
+
+  20% {
+    transform: translateX(0) translateY(0%);
+    rotate: 0deg;
+  }
+
+  80% {
+    transform: translateX(-70vw);
+    rotate: 0deg;
+  }
+
+  100% {
+    transform: translateX(-70vw) translateY(100%);
+    rotate: -30deg;
+  }
+}
+
+@keyframes backTransition {
+  0% {
+    width: 0vw;
+  }
+
+  15% {
+    width: 0vw;
+  }
+
+  85% {
+    width: 100vw;
+  }
+
+  100% {
+    width: 100vw;
+  }
+}
+
+#backHome {
+  line-height: 0;
+  cursor: pointer;
+  position: fixed;
+  width: fit-content;
+  padding: 1%;
+  bottom: 1.5%;
+  right: 1%;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 255, 0.479);
+  border-top: solid 3px blue;
+  border-right: solid 3px blue;
+  border-bottom: solid 3px rgb(0, 140, 255);
+  border-left: solid 3px rgb(0, 140, 255);
+  color: whitesmoke;
+  animation: spin 5s linear infinite;
+  box-shadow: 0px 0px 15px rgb(0, 2, 128);
+  transition: all 0.2s;
+}
+
+#backHome > span{
+  animation: reverseSpin 5s linear infinite;
+}
+
+#backHome:active {
+  scale: 105%;
+  box-shadow: inset 0px 0px 15px rgb(0, 2, 128);
+  transition: all 0.2s;
+}
+
+#backHome:hover {
+  background-color: rgb(106, 235, 0);
+  color: black;
+  scale: 110%;
+}
+
+#nameContainer {
+  position: absolute;
+  width: 101vw;
+  height: 15vh;
+  rotate: -5deg;
+  left: -10px;
+  background-color: whitesmoke;
+  border-top: 5px solid rgb(199, 25, 46);
+  z-index: 1;
+  box-shadow: 0px 0px 10px rgb(0, 0, 109);
+  display: flex;
+  flex-direction: column;
+  padding-left: 15%;
+  justify-content: center;
+}
+
+#nameContainer > div {
+  width: fit-content;
+  margin-top: 3%;
+  transform: skew(5deg);
+}
+
+#nameContainer > div > p {
+  color: rgb(178, 178, 178);
+  font-size: 20px;
+  position: relative;
+  top: 15%;
+}
+
+#nameDecoration {
+  position: absolute;
+  width: 103vw;
+  height: 32vh;
+  rotate: -5deg;
+  left: -15px;
+  top: -100px;
+  background-image: linear-gradient(to bottom, rgb(0, 0, 75) 50%, blue 50% 100%);
+  box-shadow: 0px 0px 10px rgb(0, 0, 109);
+}
+
+#arcanaText {
+  color: rgb(178, 178, 178);
+  font-size: 70px;
+}
+
+#nameText {
+  position: relative;
+  bottom: 40%;
+  left: 85%;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+#level {
+  position: relative;
+  bottom: 45%;
+  left: 1%;
+  font-size: 30px;
+  transform: skew(5deg);
+}
+
+#level::first-letter {
+  font-size: 35px;
 }
