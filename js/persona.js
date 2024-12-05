@@ -1,8 +1,14 @@
 const body = document.querySelector("body");
 const arcana = document.getElementById("arcanaText");
 const personaName = document.getElementById("nameText");
-const personaImage = document.getElementById("personaImg")
+const personaImage = document.getElementById("personaImg");
+const favoriteButton = document.getElementById("favoriteButton");
 const level = document.getElementById("level");
+const strength = document.getElementById("strength");
+const magic = document.getElementById("magic");
+const endurance = document.getElementById("endurance");
+const agility = document.getElementById("agility");
+const luck = document.getElementById("luck");
 const dContainer = document.getElementById("descriptionContainer");
 const description = document.createElement("p");
 description.setAttribute("id","description");
@@ -19,8 +25,10 @@ const selectSound = document.getElementById("selectSound");
 const backgroundMusic = document.getElementById('backgroundMusic');
 const loader = document.createElement("div");
 loader.setAttribute("id","loader");
+let personasLoaded = false;
 let favoritePersonas = new Array(0);
 let soundEnabled = false;
+let isFavorite = false;
 let selectedPersona;
 
 cardTransition.style.display = "block";
@@ -34,7 +42,7 @@ setTimeout(() => {
 if(localStorage.getItem("FavoritePersonas")){
     favoritePersonas = JSON.parse(localStorage.getItem("FavoritePersonas"));
 }else{
-    localStorage.setItem("FavoritePersonas",JSON.stringify([]));
+    localStorage.setItem("FavoritePersonas",JSON.stringify(favoritePersonas));
 }
 
 if(localStorage.getItem("SoundActive")){
@@ -84,6 +92,33 @@ if(localStorage.getItem("SelectedPersona")){
 }
 
 backgroundMusic.play();
+
+favoriteButton.addEventListener("click", () => {
+    if(personasLoaded){
+        if(isFavorite){
+            isFavorite = false;
+            favoriteButton.removeAttribute("active");
+            let position = favoritePersonas.indexOf(selectedPersona.id);
+            favoritePersonas.splice(position,1);
+        }else{
+            favoriteButton.setAttribute("active","");
+            isFavorite = true;
+            if(!favoritePersonas.includes(selectedPersona.id)){
+                favoritePersonas.push(selectedPersona.id);
+            }
+        }
+    
+        localStorage.setItem("FavoritePersonas",JSON.stringify(favoritePersonas));
+    }else{
+        invalidSound.currentTime = 0;
+        invalidSound.play();
+        next.setAttribute("invalid","true");
+        setTimeout(() => {
+            next.removeAttribute("invalid");
+        }, 200);
+    }
+    
+})
 
 toggleSound.addEventListener("click", () => {
     soundEnabled = !soundEnabled;
@@ -141,6 +176,7 @@ backHome.addEventListener("click", () => {
 function asignPersona(data){
     dContainer.removeChild(loader);
     dContainer.appendChild(description);
+    personasLoaded = true;
     selectedPersona = data;
     showInfo()
 }
@@ -178,6 +214,11 @@ function showInfo(){
     personaName.innerText = selectedPersona.name;
     level.innerText += " " + selectedPersona.level;
     personaImage.style.backgroundImage = "url(" + selectedPersona.image + ")";
+
+    if(favoritePersonas.includes(selectedPersona.id)){
+        favoriteButton.setAttribute("active","");
+        isFavorite = true;
+    }
 
     selectedPersona.weak.forEach(element => {
         let resistElement = document.getElementById(element + "Container");
@@ -235,4 +276,23 @@ function showInfo(){
     })
 
     description.innerHTML = selectedPersona.description;
+
+    strength.setAttribute("value",selectedPersona.strength);
+    document.getElementById("strengthNumber").innerText = addZero(selectedPersona.strength);
+    magic.setAttribute("value",selectedPersona.magic);
+    document.getElementById("magicNumber").innerText = addZero(selectedPersona.magic);
+    endurance.setAttribute("value",selectedPersona.endurance);
+    document.getElementById("enduranceNumber").innerText = addZero(selectedPersona.endurance);
+    agility.setAttribute("value",selectedPersona.agility);
+    document.getElementById("agilityNumber").innerText = addZero(selectedPersona.agility);
+    luck.setAttribute("value",selectedPersona.luck);
+    document.getElementById("luckNumber").innerText = addZero(selectedPersona.luck);
+}
+
+function addZero(stat){
+    if(stat < 10){
+        return "0" + stat;
+    }
+
+    return stat;
 }

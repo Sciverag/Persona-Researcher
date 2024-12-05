@@ -854,3 +854,111 @@ h1[invalid]{
   box-shadow: 0px 0px 15px rgb(0, 0, 109);
   text-wrap: balance;
 }
+
+#statContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(to right, rgba(0, 0, 255, 0) 1%, rgba(0, 0, 255, 0.87) 10% 100%);
+  transform: skew(-10deg);
+  rotate: -6deg;
+  width: 30vw;
+  bottom: 18%;
+  right: -1%;
+  border-radius: 10px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  padding-left: 5%;
+  width: 90%;
+}
+
+.stat > h1 {
+  margin-right: 4.5%;
+  max-width: 31px;
+  font-size: 40px;
+  text-shadow: 
+    -2px -2px 0 cyan,  
+    2px -2px 0  cyan,
+    -2px 2px 0 cyan,
+    2px 2px 0 cyan;
+}
+
+.stat > h2 {
+  margin-right: 6%;
+  max-width: 20px;
+  color: whitesmoke;
+  text-shadow: 0px 0px 10px blue;
+  font-size: 40px;
+}
+
+.stat > progress {
+  width: 70%;
+  border-radius: 0px;
+  box-shadow: 0px 0px 5px rgb(0, 0, 109);
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: rgb(55, 55, 55);
+  box-shadow: inset 0px 0px 2px black;
+}
+
+progress[value]::-webkit-progress-value{
+  background-color: rgb(5, 209, 245);
+  box-shadow: 2px 0px rgb(0, 69, 116);
+  transition: all 0.2s;
+}
+
+progress[value]:hover::-webkit-progress-value{
+  background-color: rgb(5, 245, 113);
+  box-shadow: 2px 0px rgb(0, 69, 116);
+}
+
+#favoriteButton {
+  position: absolute;
+  top: 48%;
+  left: 45.5%;
+  background: none;
+  border: none;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+#favoriteButton > span {
+  background-image: radial-gradient(rgb(57, 57, 57), black);
+  background-clip: text;
+  filter: drop-shadow(0px 0px 5px rgb(10, 19, 72));
+  color: rgba(240, 248, 255, 0);
+  font-size: 100px;
+  width: 97px;
+  height: 97px;
+  line-height: normal;
+  transition: all 0.3s;
+}
+
+#favoriteButton:hover > span{
+  scale: 110%;
+  rotate: -3deg;
+}
+
+#favoriteButton[active] > span {
+  background-image: radial-gradient(rgb(255, 0, 106) 10%, rgb(255, 126, 148) 90%);
+  animation: favorite 2s linear infinite alternate;
+}
+
+@keyframes favorite {
+  0%{
+    scale: 100%;
+    filter: brightness(110%) drop-shadow(0px 0px 5px rgb(10, 19, 72));
+  }
+
+  100%{
+    scale: 105%;
+    filter: brightness(100%) drop-shadow(0px 0px 5px rgb(10, 19, 72));
+  }
+}
