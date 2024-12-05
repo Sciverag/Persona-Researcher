@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../favicon.jpg" type="image/jpg">
+    <link rel="icon" href="../favicon.png" type="image/jpg">
     <title>Persona Researcher</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Teko:wght@300..700&family=VT323&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
 </head>
 <body class="personaBody">
     <section>
@@ -28,11 +28,62 @@
         <h1 id="level">LV</h1>
     </div>
 
+    <div id="elementalContainer">
+        <div id="slash"></div>
+        <div id="strike"></div>
+        <div id="pierce"></div>
+        <div id="fire"></div>
+        <div id="ice"></div>
+        <div id="electric"></div>
+        <div id="wind"></div>
+        <div id="light"></div>
+        <div id="dark"></div>
+    </div>
+
+    <div id="resistanceContainer">
+        <div id="SlashContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+        <div id="StrikeContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+        <div id="PierceContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+        <div id="FireContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+        <div id="IceContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+        <div id="ElectricContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+        <div id="WindContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+        <div id="LightContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+        <div id="DarkContainer"><span class="material-symbols-outlined">
+            radio_button_unchecked
+            </span></div>
+    </div>
+
     <div id="nameDecoration"></div>
 
     <div id="centerDecoration">
-        <div><div></div></div>
+        <div>
+            <div>
+            </div>
+        </div>
     </div>
+
+    <div id="descriptionContainer">
+        <p id="description"></p>
+    </div>
+
+    <div id="personaImg"></div>
 
     <button id="toggleSound">
         <span id="volumeIcon" class="material-symbols-outlined">
@@ -40,11 +91,11 @@
         </span>
     </button>
 
-    <a href="home.html" id="backHome">
+    <button id="backHome">
         <span class="material-symbols-outlined">
             home
         </span>
-    </a>
+    </button>
 
     <img id="cardTransition" class="fromPersona" src="../img/cardback.webp">
     <div id="backTransition" class="fromPersona"></div>
@@ -53,6 +104,7 @@
         <source src="../audio/background.mp3" type="audio/mp3"></source>
     </audio>
     <audio id="hoverSound" src="../audio/hover.wav" preload="auto"></audio>
+    <audio id="selectSound" src="../audio/select.wav" preload="auto"></audio>
     <audio id="invalidSound" src="../audio/invalid.wav" preload="auto"></audio>
     <audio id="nextPageSound" src="../audio/nextpage.wav" preload="auto"></audio>
     <audio id="personaHoverSound" src="../audio/personaHover.wav" preload="auto"></audio>

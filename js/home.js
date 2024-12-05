@@ -11,6 +11,7 @@ const personaHoverSound = document.getElementById('personaHoverSound');
 const invalidSound = document.getElementById('invalidSound');
 const nextPageSound = document.getElementById('nextPageSound');
 const arcanaSound = document.getElementById('arcanaSound');
+const selectSound = document.getElementById("selectSound");
 const backgroundMusic = document.getElementById('backgroundMusic');
 const loader = document.createElement("div");
 const cardTransition = document.getElementById("cardTransition");
@@ -30,6 +31,12 @@ let personaSizeEnd = 13;
 let totalOfPersonas;
 
 localStorage.removeItem("SelectedPersona");
+cardTransition.style.display = "block";
+backTransition.style.display = "block";
+setTimeout(() => {
+    cardTransition.style.display = "none";
+    backTransition.style.display = "none";
+}, 2000)
 
 if(localStorage.getItem("PersonaName")){
     nameSearcher.value = localStorage.getItem("PersonaName");
@@ -56,6 +63,7 @@ invalidSound.volume = 0;
 personaHoverSound.volume = 0;
 nextPageSound.volume = 0;
 arcanaSound.volume = 0;
+selectSound.volume = 0;
 
 toggleSound.addEventListener("click", () => {
     soundEnabled = !soundEnabled;
@@ -69,6 +77,7 @@ toggleSound.addEventListener("click", () => {
         personaHoverSound.volume = 0.1;
         nextPageSound.volume = 0.2;
         arcanaSound.volume = 0.2;
+        selectSound.volume = 0.2;
         volumeIcon.innerText = "volume_up";
         toggleSound.setAttribute("active","");
     } else {
@@ -78,6 +87,7 @@ toggleSound.addEventListener("click", () => {
         personaHoverSound.volume = 0;
         nextPageSound.volume = 0;
         arcanaSound.volume = 0;
+        selectSound.volume = 0;
         volumeIcon.innerText = "volume_off";
         toggleSound.removeAttribute("active");
     }
@@ -295,7 +305,7 @@ function obtainPersonas(){
 
 function displayPersonas(personas){
     if(personas.length == 0){
-        if(favoritePersonas.length == 0){
+        if(favoritePersonas.length == 0 && nameSearcher.value == ""){
             personaContainer.innerHTML = "<h1 invalid>You don't have favorite Personas!</h1>";
         }else{
             personaContainer.innerHTML = "<h1 invalid>There is no Persona whith that name!</h1>";
@@ -377,8 +387,12 @@ function createPersona(persona){
 
     personaCard.addEventListener("click", () => {
         localStorage.setItem("SelectedPersona",persona.query);
+        selectSound.currentTime = 0;
+        selectSound.play();
         cardTransition.style.display = "block";
+        cardTransition.removeAttribute("class");
         backTransition.style.display = "block";
+        backTransition.removeAttribute("class");
         setTimeout(() => {
             window.location.href = "persona.html";
         }, 2000)

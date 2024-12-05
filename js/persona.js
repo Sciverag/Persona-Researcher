@@ -1,15 +1,21 @@
 const body = document.querySelector("body");
 const arcana = document.getElementById("arcanaText");
 const personaName = document.getElementById("nameText");
+const personaImage = document.getElementById("personaImg")
 const level = document.getElementById("level");
+const dContainer = document.getElementById("descriptionContainer");
+const description = document.createElement("p");
+description.setAttribute("id","description");
 const cardTransition = document.getElementById("cardTransition");
 const backTransition = document.getElementById("backTransition");
 const toggleSound = document.getElementById("toggleSound");
+const backHome = document.getElementById("backHome");
 const hoverSound = document.getElementById('hoverSound');
 const personaHoverSound = document.getElementById('personaHoverSound');
 const invalidSound = document.getElementById('invalidSound');
 const nextPageSound = document.getElementById('nextPageSound');
 const arcanaSound = document.getElementById('arcanaSound');
+const selectSound = document.getElementById("selectSound");
 const backgroundMusic = document.getElementById('backgroundMusic');
 const loader = document.createElement("div");
 loader.setAttribute("id","loader");
@@ -33,7 +39,7 @@ if(localStorage.getItem("FavoritePersonas")){
 
 if(localStorage.getItem("SelectedPersona")){
     console.log("obtainingPersona");
-    body.appendChild(loader);
+    dContainer.appendChild(loader);
     fetch("https://persona-compendium.onrender.com/personas/"+localStorage.getItem("SelectedPersona")+"/", {
         method: 'GET'
     })
@@ -51,6 +57,7 @@ invalidSound.volume = 0;
 personaHoverSound.volume = 0;
 nextPageSound.volume = 0;
 arcanaSound.volume = 0;
+selectSound.volume = 0;
 
 toggleSound.addEventListener("click", () => {
     soundEnabled = !soundEnabled;
@@ -64,6 +71,7 @@ toggleSound.addEventListener("click", () => {
         personaHoverSound.volume = 0.1;
         nextPageSound.volume = 0.2;
         arcanaSound.volume = 0.2;
+        selectSound.volume = 0.2;
         volumeIcon.innerText = "volume_up";
         toggleSound.setAttribute("active","");
     } else {
@@ -73,6 +81,7 @@ toggleSound.addEventListener("click", () => {
         personaHoverSound.volume = 0;
         nextPageSound.volume = 0;
         arcanaSound.volume = 0;
+        selectSound.volume = 0;
         volumeIcon.innerText = "volume_off";
         toggleSound.removeAttribute("active");
     }
@@ -83,14 +92,118 @@ toggleSound.addEventListener("mouseenter", () => {
     hoverSound.play();
 });
 
+backHome.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+});
+
+backHome.addEventListener("click", () => {
+    selectSound.currentTime = 0;
+    selectSound.play();
+    cardTransition.style.display = "block";
+    cardTransition.removeAttribute("class");
+    backTransition.style.display = "block";
+    backTransition.removeAttribute("class");
+    setTimeout(() => {
+        window.location.href = "home.html";
+    }, 2000)
+})
+
 function asignPersona(data){
-    body.removeChild(loader);
+    dContainer.removeChild(loader);
+    dContainer.appendChild(description);
     selectedPersona = data;
     showInfo()
 }
 
 function showInfo(){
+    //Some personas from the API doesn't have images, so this first part of the code fixes that
+    if(selectedPersona.name == 'Hermes'){
+        selectedPersona.image = "https://megatenwiki.com/images/thumb/d/d4/P3_Hermes_Artwork.png/300px-P3_Hermes_Artwork.png";
+    }
+    if(selectedPersona.name == 'Mother Harlot'){
+        selectedPersona.image = "https://megatenwiki.com/images/thumb/f/f2/SMT3NM_Mother_Harlot_Artwork.png/300px-SMT3NM_Mother_Harlot_Artwork.png";
+    }
+    if(selectedPersona.name == 'Take-Mikazuchi'){
+        selectedPersona.image = "https://megatenwiki.com/images/thumb/7/71/SMT1_SFC_Mikazuchi_Artwork.png/299px-SMT1_SFC_Mikazuchi_Artwork.png";
+    }
+    if(selectedPersona.name == 'Odin'){
+        selectedPersona.image = "https://megatenwiki.com/images/thumb/8/80/SMT1_SFC_Odin_Artwork.png/300px-SMT1_SFC_Odin_Artwork.png";
+    }
+    if(selectedPersona.name == 'Hanuman'){
+        selectedPersona.image = "https://megatenwiki.com/images/d/dd/SMT1_SFC_Hanuman_Artwork.png";
+    }
+    if(selectedPersona.name == 'Abaddon'){
+        selectedPersona.image = "https://megatenwiki.com/images/thumb/5/5f/SMT1_SFC_Abaddon_Artwork.png/300px-SMT1_SFC_Abaddon_Artwork.png";
+    }
+    if(selectedPersona.name == 'Bishamonten'){
+        selectedPersona.image = "https://megatenwiki.com/images/thumb/c/cc/DeSu1_Bishamon_Artwork.png/299px-DeSu1_Bishamon_Artwork.png";
+    }
+    if(selectedPersona.name == 'Asura'){
+        selectedPersona.image = "https://megatenwiki.com/images/thumb/d/d7/SMTSJ_Asura_Artwork.png/300px-SMTSJ_Asura_Artwork.png";
+    }
+    if(selectedPersona.name == 'Satan'){
+        selectedPersona.image = "https://megatenwiki.com/images/thumb/9/9d/SMT2_Satan_Artwork.png/299px-SMT2_Satan_Artwork.png";
+    }
     arcana.innerText = selectedPersona.arcana;
     personaName.innerText = selectedPersona.name;
     level.innerText += " " + selectedPersona.level;
+    personaImage.style.backgroundImage = "url(" + selectedPersona.image + ")";
+
+    selectedPersona.weak.forEach(element => {
+        let resistElement = document.getElementById(element + "Container");
+        console.log(element + "Container");
+        resistElement.innerHTML = "";
+        resistElement.setAttribute("class","weak");
+        let span = document.createElement("span");
+        span.setAttribute("class","material-symbols-outlined");
+        span.innerText = "priority_high";
+        resistElement.appendChild(span);
+    });
+
+    selectedPersona.resists.forEach(element => {
+        let resistElement = document.getElementById(element + "Container");
+        console.log(element + "Container");
+        resistElement.innerHTML = "";
+        resistElement.setAttribute("class","resists");
+        let span = document.createElement("span");
+        span.setAttribute("class","material-symbols-outlined");
+        span.innerText = "shield";
+        resistElement.appendChild(span);
+    })
+
+    selectedPersona.reflects.forEach(element => {
+        let resistElement = document.getElementById(element + "Container");
+        console.log(element + "Container");
+        resistElement.innerHTML = "";
+        resistElement.setAttribute("class","reflects");
+        let span = document.createElement("span");
+        span.setAttribute("class","material-symbols-outlined");
+        span.innerText = "arming_countdown";
+        resistElement.appendChild(span);
+    })
+
+    selectedPersona.absorbs.forEach(element => {
+        let resistElement = document.getElementById(element + "Container");
+        console.log(element + "Container");
+        resistElement.innerHTML = "";
+        resistElement.setAttribute("class","absorbs");
+        let span = document.createElement("span");
+        span.setAttribute("class","material-symbols-outlined");
+        span.innerText = "shield_with_heart";
+        resistElement.appendChild(span);
+    })
+
+    selectedPersona.nullifies.forEach(element => {
+        let resistElement = document.getElementById(element + "Container");
+        console.log(element + "Container");
+        resistElement.innerHTML = "";
+        resistElement.setAttribute("class","nullifies");
+        let span = document.createElement("span");
+        span.setAttribute("class","material-symbols-outlined");
+        span.innerText = "block";
+        resistElement.appendChild(span);
+    })
+
+    description.innerHTML = selectedPersona.description;
 }
