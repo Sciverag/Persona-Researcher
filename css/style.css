@@ -12,7 +12,7 @@
 
 html {
     background-image: url(../img/velvetroom.jpg);
-    background-size: contain;
+    background-size: cover;
     background-position: center;
 }
 
@@ -22,6 +22,133 @@ body {
     flex-direction: column;
     background: rgba(31, 72, 255, 0.877);
     z-index: 1;
+    overflow-x: hidden;
+}
+
+.personaBody {
+  overflow-y: hidden;
+}
+
+#arcana {
+  rotate: -15deg;
+}
+
+#arcanaSelector {
+  position: fixed;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  top: -150px;
+  right: -150px;
+  z-index: 3;
+  filter: drop-shadow(0px 0px 10px rgb(0, 0, 109));
+}
+
+#nameSearcher {
+  position: fixed;
+  top: 3%;
+  width: 50%;
+  left: 25%;
+  right: 25%;
+  z-index: 0;
+  border: solid 5px blue;
+  font-size: x-large;
+  border-radius: 20px;
+  text-align: center;
+  transition: all 0.2s;
+  box-shadow: 0px 0px 10px rgb(0, 0, 109);
+}
+
+#nameSearcher:hover {
+  scale: 102%;
+}
+
+#nameSearcher:focus {
+  outline: none;
+  color: blue;
+  scale: 102%;
+}
+
+#arcanaSelector > *:not(#central) {
+  width: 100px;
+  height: 100px;
+  padding: 1%;
+  border: solid 5px blue;
+  background-color: rgb(0, 42, 255);
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: whitesmoke;
+  font-size: larger;
+  font-weight: bold;
+  align-self: center;
+  justify-self: center;
+}
+
+#arcanaSelector > *:is(:nth-child(4), :nth-child(5), :nth-child(6)){
+  grid-row: 3;
+}
+
+#arcanaSelector > *:is(:nth-child(1), :nth-child(3), :nth-child(4), :nth-child(6)) {
+  position: relative;
+}
+
+#arcanaSelector > *:is(:nth-child(1), :nth-child(3)) {
+  top: 60px;
+}
+
+#arcanaSelector > *:is(:nth-child(4), :nth-child(6)) {
+  bottom: 60px;
+}
+
+#arcanaSelector > *:is(:nth-child(1), :nth-child(4)) {
+  left: 10px;
+}
+
+#arcanaSelector > *:is(:nth-child(3), :nth-child(6)) {
+  right: 10px;
+}
+
+#central {
+  height: 125px;
+  width: 125px;
+  border-radius: 100%;
+  background-color: rgb(0, 81, 255);
+  border: solid 5px blue;
+  grid-column: 2;
+  grid-row: 2;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#central:hover {
+  background-color: rgb(106, 235, 0);
+  border: none;
+  box-shadow: 0px 0px 10px greenyellow;
+}
+
+#central:active {
+  border: solid 5px blue;
+  box-shadow: inset 0px 0px 10px rgb(0, 0, 109);
+  transition: all 0.05s;
+}
+
+#arcanaSelector:has(#central[pressed]){
+  animation: spin 1s linear;
+}
+
+#selectorBackground {
+  position: fixed;
+  width: 340px;
+  height: 340px;
+  border: solid 5px blue;
+  background-color: rgb(0, 0, 222);
+  border-radius: 100%;
+  top: -140px;
+  right: -150px;
+  z-index: 2;
+  box-shadow: 0px 0px 10px rgb(0, 0, 109);
 }
 
 section{
@@ -31,13 +158,14 @@ section{
     z-index: -1;
     background: rgba(53, 134, 255, 0.718);
   }
+
   section .air{
     position: fixed;
     bottom: 0;
     width: 100%;
     height: 100px;
     background: url(https://1.bp.blogspot.com/-xQUc-TovqDk/XdxogmMqIRI/AAAAAAAACvI/AizpnE509UMGBcTiLJ58BC6iViPYGYQfQCLcBGAsYHQ/s1600/wave.png);
-    background-size: 1000px 100px
+    background-size: 1000px 100px;
   }
   section .air.air1{
     position: fixed;
@@ -103,6 +231,7 @@ section{
     background-color: rgba(0, 17, 255, 0.575);
     border-radius: 15px;
     box-shadow: inset 0px 0px 15px rgb(0, 2, 128);
+    color: whitesmoke;
 }
 
 #pageSelector {
@@ -130,14 +259,25 @@ section{
 }
 
 #pageSelector > button:hover {
-  background-color: greenyellow;
+  background-color: rgb(106, 235, 0);
   color: black;
   scale: 129%;
 }
 
 button[invalid]{
   background-color: red !important;
-  transform: translateX(-2%);
+  animation: invalidAnim 0.2s linear;
+}
+
+h1[invalid]{
+  color: red;
+  animation: invalidAnim 0.2s linear;
+}
+
+@keyframes invalidAnim {
+  0%{transform: translateX(-2%);}
+  50%{transform: translateX(2%);}
+  100%{transform: translateX(0%);}
 }
 
 #pageSelector > button:active {
@@ -170,6 +310,19 @@ button[invalid]{
     perspective: 2500px;
     cursor: pointer;
     margin-bottom: 1%;
+    transition: all 0.5s;
+    animation: cardSpawn 0.1s linear;
+}
+
+@keyframes cardSpawn {
+  0% {
+    scale: 125%;
+    transform: translateX(-20px);
+  }
+  100% {
+    scale: 100%;
+    transform: translateX(0px);
+  }
 }
   
 .cover-image {
@@ -283,4 +436,662 @@ button[invalid]{
 .card:hover > .wrapper{
     border: 7px outset rgb(255, 224, 83);
     transition: all 0.5s;
+}
+
+#loader {
+  border: 16px solid rgb(0, 140, 255);
+  border-top: 16px solid blue;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 1.5s linear infinite;
+}
+
+#toggleSound {
+  line-height: 0;
+  cursor: pointer;
+  position: fixed;
+  width: fit-content;
+  padding: 1%;
+  bottom: 1.5%;
+  left: 1%;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 255, 0.479);
+  border-top: solid 3px blue;
+  border-right: solid 3px blue;
+  border-bottom: solid 3px rgb(0, 140, 255);
+  border-left: solid 3px rgb(0, 140, 255);
+  color: whitesmoke;
+  animation: spin 5s linear infinite;
+  box-shadow: 0px 0px 15px rgb(0, 2, 128);
+  transition: all 0.2s;
+}
+
+#toggleSound:active {
+  scale: 105%;
+  box-shadow: inset 0px 0px 15px rgb(0, 2, 128);
+  transition: all 0.2s;
+}
+
+#toggleSound:hover {
+  background-color: rgb(235, 0, 0);
+  color: black;
+  scale: 110%;
+}
+
+#toggleSound[active]:hover {
+  background-color: rgb(106, 235, 0);
+}
+
+#volumeIcon {
+  animation: reverseSpin 5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes reverseSpin {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@media (max-width: 1200px) {
+  #nameSearcher {
+    z-index: 2;
+  }
+}
+
+@media (max-width: 780px) {
+  #nameSearcher {
+    right: auto;
+    left: 0;
+  }
+}
+
+.fromPersona {
+  animation-direction: reverse !important;
+}
+
+#cardTransition {
+  position: fixed;
+  display: none;
+  height: 100vh;
+  right: 0;
+  z-index: 10;
+  animation: pageTransition 2s ease-in-out;
+  box-shadow: 0px 0px 20px rgb(0, 0, 109);
+  cursor: progress;
+}
+
+#backTransition {
+  position: fixed;
+  display: none;
+  background-color: rgb(0, 0, 109);
+  width: 100vw;
+  height: 100vh;
+  right: 0;
+  z-index: 9;
+  animation: backTransition 2s ease-in-out;
+  cursor: progress;
+}
+
+@keyframes pageTransition {
+  0% {
+    transform: translateX(0) translateY(100%);
+    rotate: 30deg;
+  }
+
+  20% {
+    transform: translateX(0) translateY(0%);
+    rotate: 0deg;
+  }
+
+  80% {
+    transform: translateX(-70vw);
+    rotate: 0deg;
+  }
+
+  100% {
+    transform: translateX(-70vw) translateY(100%);
+    rotate: -30deg;
+  }
+}
+
+@keyframes backTransition {
+  0% {
+    width: 0vw;
+  }
+
+  15% {
+    width: 0vw;
+  }
+
+  85% {
+    width: 100vw;
+  }
+
+  100% {
+    width: 100vw;
+  }
+}
+
+#backHome {
+  line-height: 0;
+  cursor: pointer;
+  position: fixed;
+  width: fit-content;
+  padding: 1%;
+  bottom: 1.5%;
+  right: 1%;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 255, 0.479);
+  border-top: solid 3px blue;
+  border-right: solid 3px blue;
+  border-bottom: solid 3px rgb(0, 140, 255);
+  border-left: solid 3px rgb(0, 140, 255);
+  color: whitesmoke;
+  animation: spin 5s linear infinite;
+  box-shadow: 0px 0px 15px rgb(0, 2, 128);
+  transition: all 0.2s;
+}
+
+#backHome > span{
+  animation: reverseSpin 5s linear infinite;
+}
+
+#backHome:active {
+  scale: 105%;
+  box-shadow: inset 0px 0px 15px rgb(0, 2, 128);
+  transition: all 0.2s;
+}
+
+#backHome:hover {
+  background-color: rgb(106, 235, 0);
+  color: black;
+  scale: 110%;
+}
+
+#nameContainer {
+  position: absolute;
+  width: 101vw;
+  height: 15vh;
+  rotate: -5deg;
+  left: -10px;
+  background-image: linear-gradient(to right, whitesmoke 60%, rgb(0, 195, 255));
+  border-top: 5px solid rgb(199, 25, 46);
+  z-index: 2;
+  box-shadow: 0px 0px 10px rgb(0, 0, 109);
+  display: flex;
+  flex-direction: column;
+  padding-left: 15%;
+  justify-content: center;
+}
+
+#nameContainer > div {
+  width: fit-content;
+  margin-top: 3%;
+  transform: skew(5deg);
+}
+
+#nameContainer > div > p {
+  color: rgb(178, 178, 178);
+  font-size: 20px;
+  position: relative;
+  top: 15%;
+}
+
+#nameDecoration {
+  position: absolute;
+  width: 105vw;
+  height: 32vh;
+  rotate: -5deg;
+  left: -20px;
+  top: -100px;
+  background-image: linear-gradient(to bottom, rgb(0, 0, 75) 50%, blue 50% 100%);
+  box-shadow: 0px 0px 10px rgb(0, 0, 109);
+  z-index: 1;
+}
+
+#arcanaText {
+  color: rgb(178, 178, 178);
+  font-size: 70px;
+}
+
+#nameText {
+  position: relative;
+  bottom: 40%;
+  left: 85%;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+#level {
+  position: relative;
+  bottom: 45%;
+  left: 1%;
+  font-size: 30px;
+  transform: skew(5deg);
+}
+
+#level::first-letter {
+  font-size: 35px;
+}
+
+#centerDecoration {
+  width: 105vw;
+  height: 30vh;
+  background-color: blue;
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  top: 50%;
+  rotate: -5deg;
+  left: -15px;
+  z-index: 0;
+  mix-blend-mode: overlay;
+}
+
+#centerDecoration > div {
+  position: relative;
+  width: 35vw;
+  height: 35vw;
+  background-color: rgb(130, 130, 130);
+  bottom: 10%;
+  right: 7%;
+  rotate: -47deg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mix-blend-mode: normal;
+}
+
+#centerDecoration > div > div {
+  width: 95%;
+  height: 95%;
+  border: solid 5px blue;
+}
+
+#personaImg {
+  width: 900px;
+  height: 900px;
+  position: absolute;
+  bottom: 0;
+  right: -3%;
+  filter: drop-shadow(10px 10px 1px rgba(25, 0, 255, 0.719));
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: persona 8s infinite ease-in-out alternate;
+}
+
+@keyframes persona {
+  0% {
+    transform: translateY(0%);
+  }
+
+  100% {
+    transform: translateY(5%);
+  }
+
+}
+
+#elementalContainer, #resistanceContainer {
+  position: absolute;
+  width: 100vw;
+  height: 10vh;
+  top: 17%;
+  rotate: -5deg;
+  z-index: 2;
+  display: flex;
+  padding-left: 8%;
+}
+
+#resistanceContainer {
+  padding-left: 8.5%;
+  top: 25.5%;
+}
+
+#elementalContainer > div{
+  width: 73px;
+  height: 79px;
+  border: solid 5px blue;
+  background-color: black;
+  border-radius: 100%;
+  transform: skew(-10deg);
+  background-position: center;
+  background-size: cover;
+}
+
+#resistanceContainer > div {
+  width: 60px;
+  height: 60px;
+  transform: skew(2deg);
+  border-radius: 100%;
+  margin-right: 0.8%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#resistanceContainer > div > span {
+  line-height: normal;
+  font-size: 60px;
+  color: rgb(212, 212, 212);
+  text-shadow: 
+    -2px -2px 0 black,  
+    2px -2px 0 black,
+    -2px 2px 0 black,
+    2px 2px 0 black;
+}
+
+#resistanceContainer > div:not([class]) > span{
+  font-size: 20px;
+}
+
+#elementalContainer > div:nth-child(3){
+  margin-right: 2%;
+}
+
+#resistanceContainer > div:nth-child(3){
+  margin-right: 2.6%;
+}
+
+#slash {
+  background-image: url(https://megatenwiki.com/images/b/b6/P3R_Slash_Resistance_Icon.png);
+}
+
+#strike {
+  background-image: url(https://megatenwiki.com/images/2/21/P3R_Strike_Resistance_Icon.png);
+}
+
+#pierce {
+  background-image: url(https://megatenwiki.com/images/c/c2/P3R_Pierce_Resistance_Icon.png);
+}
+
+#fire {
+  background-image: url(https://megatenwiki.com/images/a/a2/P3R_Fire_Resistance_Icon.png);
+}
+
+#ice {
+  background-image: url(https://megatenwiki.com/images/6/60/P3R_Ice_Resistance_Icon.png);
+}
+
+#electric {
+  background-image: url(https://megatenwiki.com/images/b/b2/P3R_Elec_Resistance_Icon.png);
+}
+
+#wind {
+  background-image: url(https://megatenwiki.com/images/3/37/P3R_Wind_Resistance_Icon.png);
+}
+
+#light {
+  background-image: url(https://megatenwiki.com/images/9/99/P3R_Light_Resistance_Icon.png);
+}
+
+#dark {
+  background-image: url(https://megatenwiki.com/images/1/17/P3R_Darkness_Resistance_Icon.png);
+}
+
+#descriptionContainer {
+  position: absolute;
+  bottom: 12%;
+  left: 8%;
+  width: 40vw;
+  min-height: 35vh;
+  font-size: 25px;
+  padding: 0.5%;
+  color: whitesmoke;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(21, 21, 104);
+  border: solid 5px rgb(21, 21, 104);
+  box-shadow: 0px 0px 15px rgb(0, 0, 109);
+  text-wrap: balance;
+}
+
+#statContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(to right, rgba(0, 0, 255, 0) 1%, rgba(0, 0, 255, 0.87) 10% 100%);
+  transform: skew(-10deg);
+  rotate: -6deg;
+  width: 30vw;
+  bottom: 18%;
+  right: -1%;
+  border-radius: 10px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  padding-left: 5%;
+  width: 90%;
+}
+
+.stat > h1 {
+  margin-right: 4.5%;
+  max-width: 31px;
+  font-size: 40px;
+  text-shadow: 
+    -2px -2px 0 cyan,  
+    2px -2px 0  cyan,
+    -2px 2px 0 cyan,
+    2px 2px 0 cyan;
+}
+
+.stat > h2 {
+  margin-right: 6%;
+  max-width: 20px;
+  color: whitesmoke;
+  text-shadow: 0px 0px 10px blue;
+  font-size: 40px;
+}
+
+.stat > progress {
+  width: 70%;
+  border-radius: 0px;
+  box-shadow: 0px 0px 5px rgb(0, 0, 109);
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: rgb(55, 55, 55);
+  box-shadow: inset 0px 0px 2px black;
+}
+
+progress[value]::-webkit-progress-value{
+  background-color: rgb(5, 209, 245);
+  box-shadow: 2px 0px rgb(0, 69, 116);
+  transition: all 0.2s;
+}
+
+progress[value]:hover::-webkit-progress-value{
+  background-color: rgb(5, 245, 113);
+  box-shadow: 2px 0px rgb(0, 69, 116);
+}
+
+#favoriteButton {
+  position: absolute;
+  top: 48%;
+  left: 45.5%;
+  background: none;
+  border: none;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+#favoriteButton > span {
+  background-image: radial-gradient(rgb(57, 57, 57), black);
+  background-clip: text;
+  filter: drop-shadow(0px 0px 5px rgb(10, 19, 72));
+  color: rgba(240, 248, 255, 0);
+  font-size: 100px;
+  width: 97px;
+  height: 97px;
+  line-height: normal;
+  transition: all 0.3s;
+}
+
+#favoriteButton:hover > span{
+  scale: 110%;
+  rotate: -3deg;
+}
+
+#favoriteButton[active] > span {
+  background-image: radial-gradient(rgb(255, 0, 106) 10%, rgb(255, 126, 148) 90%);
+  animation: favorite 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes favorite {
+  0%{
+    scale: 100%;
+    filter: brightness(110%) drop-shadow(0px 0px 5px rgb(10, 19, 72));
+  }
+
+  100%{
+    scale: 105%;
+    filter: brightness(100%) drop-shadow(0px 0px 5px rgb(10, 19, 72));
+  }
+}
+
+#fusionButton {
+  position: absolute;
+  bottom: 10%;
+  left: 40%;
+  transform: rotate(-6deg);
+  background-color: rgb(46, 67, 250);
+  text-decoration: none;
+  color: whitesmoke;
+  font-weight: bold;
+  font-size: 40px;
+  padding: 0.5%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgb(0, 0, 109);
+  transition: all 0.2s;
+}
+
+#fusionButton:hover {
+  scale: 110%;
+  background-color: rgb(106, 235, 0);
+  color: black;
+}
+
+#arcanaImage {
+  width: 50px;
+  height: 70px;
+  position: absolute;
+  top: 10.5%;
+  left: 12.5%;
+  rotate: -20deg;
+  box-shadow: 0px 0px 10px rgb(0, 153, 255);
+  z-index: 2;
+  background-size: contain;
+  background-position: center;
+  transition: all 0.2s;
+}
+
+#arcanaImage:hover {
+  animation: arcanaCard 5s linear infinite alternate;
+}
+
+@keyframes arcanaCard {
+  0% {transform: rotateY(0deg);}
+  100% {transform: rotateY(360deg); }
+}
+
+#arcanaImage[Fool]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/5/53/Fool-0.png/revision/latest?cb=20160404201043);
+}
+
+#arcanaImage[Magician]{
+  background-image: url(https://i.pinimg.com/originals/0a/65/85/0a65858c0dd8be86e62c1229a15a2b5f.png);
+}
+
+#arcanaImage[Priestess]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/a/ad/Priestess-0.png/revision/latest?cb=20160404201724);
+}
+
+#arcanaImage[Empress]{
+  background-image: url(https://i.pinimg.com/originals/1e/ca/f8/1ecaf81b18e473c8953bf7ecae7f937b.png);
+}
+
+#arcanaImage[Emperor]{
+  background-image: url(https://i.pinimg.com/originals/ba/3a/a9/ba3aa9453afb0144aa1b032ef60750a5.jpg);
+}
+
+#arcanaImage[Hierophant]{
+  background-image: url(https://i.pinimg.com/originals/6a/a0/ec/6aa0ec318694e075c5ef227501d75302.png);
+}
+
+#arcanaImage[Lovers]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/a/a5/Lovers-0.png/revision/latest?cb=20160404202019);
+}
+
+#arcanaImage[Chariot]{
+  background-image: url(https://i.pinimg.com/originals/92/12/c3/9212c30b6cec1178fb681bf1f24f48c8.png);
+}
+
+#arcanaImage[Justice]{
+  background-image: url(https://i.pinimg.com/originals/ff/62/0c/ff620c777a9cad6903569a80e0b2f509.png);
+}
+
+#arcanaImage[Hermit]{
+  background-image: url(https://i.pinimg.com/originals/e1/a1/91/e1a19107faaf5386de6226a9555f3b8a.png);
+}
+
+#arcanaImage[Fortune]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr732-f15d882e-4f60-45e0-a9cd-9b964bf923d6.png/v1/fill/w_753,h_1061,strp/persona_3_4_tarot_card_deck_hr___fortune_arcana_by_enetirnel_d6xr732-pre.png);
+}
+
+#arcanaImage[Strength]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr6y8-941b82dc-51ca-4fbb-9e2a-1101d43c3e45.png/v1/fill/w_753,h_1061,q_70,strp/persona_3_tarot_card_deck_hr___strength_arcana_by_enetirnel_d6xr6y8-pre.jpg);
+}
+
+#arcanaImage[Hanged]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr6uh-485c5d04-8886-4aa2-a528-1dff9361b30a.png/v1/fill/w_753,h_1061,q_70,strp/persona_3_4_tarot_card_deck_hr___hanged_man_arcana_by_enetirnel_d6xr6uh-pre.jpg);
+}
+
+#arcanaImage[Death]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/d/df/Death-0.png/revision/latest?cb=20160404202413);
+}
+
+#arcanaImage[Temperance]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr6ol-7d2726d1-2d96-4fbe-93b9-304ea74920bd.png/v1/fill/w_753,h_1061,q_70,strp/persona_3_4_tarot_card_deck_hr___temperance_arcana_by_enetirnel_d6xr6ol-pre.jpg);
+}
+
+#arcanaImage[Devil]{
+  background-image: url(https://i.pinimg.com/originals/91/7c/dd/917cddeaf7aadc30956a22866a441d00.jpg);
+}
+
+#arcanaImage[Tower]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/1/1f/Tower-0.png/revision/latest/scale-to-width-down/340?cb=20160404202557);
+}
+
+#arcanaImage[Star]{
+  background-image: url(https://i.pinimg.com/originals/98/e5/43/98e543777f851b560561472cff1d86d0.png);
+}
+
+#arcanaImage[Moon]{
+  background-image: url(https://i.pinimg.com/originals/b3/86/5f/b3865ff42cb06800f6c79e34ba4831e0.png);
+}
+
+#arcanaImage[Sun]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr6ln-abe3aba0-577c-49d1-935b-f715a7d64deb.png/v1/fill/w_753,h_1061,q_70,strp/persona_3_4_tarot_card_deck_hr___the_sun_arcana_by_enetirnel_d6xr6ln-pre.jpg);
+}
+
+#arcanaImage[Judgement]{
+  background-image: url(https://i.pinimg.com/originals/fa/64/11/fa641127bc02de160f00ae2fc4bf8ee1.png);
+}
+
+#arcanaImage[Aeon]{
+  background-image: url(https://i.pinimg.com/originals/e7/ec/a1/e7eca1a46cd1ff9c290926d66bac7b19.png);
 }

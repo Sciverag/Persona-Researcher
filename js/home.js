@@ -2,23 +2,136 @@ const personaContainer = document.getElementById("personaContainer");
 const previous = document.getElementById("previous");
 const next = document.getElementById("next");
 const pageNumbers = document.getElementById("pageNumbers");
+const toggleSound = document.getElementById("toggleSound");
+const arcanaText = document.getElementById("arcana");
+const arcanaButton = document.getElementById("central");
+const nameSearcher = document.getElementById("nameSearcher");
 const hoverSound = document.getElementById('hoverSound');
 const personaHoverSound = document.getElementById('personaHoverSound');
 const invalidSound = document.getElementById('invalidSound');
 const nextPageSound = document.getElementById('nextPageSound');
+const arcanaSound = document.getElementById('arcanaSound');
+const selectSound = document.getElementById("selectSound");
 const backgroundMusic = document.getElementById('backgroundMusic');
+const loader = document.createElement("div");
+const cardTransition = document.getElementById("cardTransition");
+const backTransition = document.getElementById("backTransition");
+let personaList;
+let favoritePersonas = new Array(0);
+let originalPersonaList;
+let arcanaList = ['ALL','Fool','Magician','Priestess','Empress','Emperor','Hierophant','Lovers','Chariot','Justice','Hermit','Fortune','Strength','Hanged','Death','Temperance','Devil','Tower','Star','Moon','Sun','Judgement','Aeon','DLC','FAVORITE'];
+let currentArcanaID = 0;
+let personasLoaded = false;
+let soundEnabled = false;
+let firstSearched = false;
+loader.setAttribute("id","loader");
+
 let personaSizeStart = 0;
 let personaSizeEnd = 13;
-let totalOfPersonas = 213;
+let totalOfPersonas;
 
-backgroundMusic.volume = 0.2;
-hoverSound.volume = 0.5;
-invalidSound.volume = 0.5;
-personaHoverSound.volume = 0.1;
+localStorage.removeItem("SelectedPersona");
+cardTransition.style.display = "block";
+backTransition.style.display = "block";
+setTimeout(() => {
+    cardTransition.style.display = "none";
+    backTransition.style.display = "none";
+}, 2000)
+
+if(localStorage.getItem("PersonaName")){
+    nameSearcher.value = localStorage.getItem("PersonaName");
+}else{
+    localStorage.setItem("PersonaName","");
+}
+
+if(localStorage.getItem("FavoritePersonas")){
+    favoritePersonas = JSON.parse(localStorage.getItem("FavoritePersonas"));
+}else{
+    localStorage.setItem("FavoritePersonas",JSON.stringify([]));
+}
+
+if(localStorage.getItem("SoundActive")){
+    soundEnabled = JSON.parse(localStorage.getItem("SoundActive"));
+    if (soundEnabled) {
+        backgroundMusic.volume = 0.2;
+        hoverSound.volume = 0.5;
+        invalidSound.volume = 0.5;
+        personaHoverSound.volume = 0.1;
+        nextPageSound.volume = 0.2;
+        arcanaSound.volume = 0.2;
+        selectSound.volume = 0.2;
+        volumeIcon.innerText = "volume_up";
+        toggleSound.setAttribute("active","");
+    } else {
+        backgroundMusic.volume = 0;
+        hoverSound.volume = 0;
+        invalidSound.volume = 0;
+        personaHoverSound.volume = 0;
+        nextPageSound.volume = 0;
+        arcanaSound.volume = 0;
+        selectSound.volume = 0;
+        volumeIcon.innerText = "volume_off";
+        toggleSound.removeAttribute("active");
+    }
+}else{
+    localStorage.setItem("SoundActive",JSON.stringify(false));
+}
+
+if(localStorage.getItem("MusicTime")){
+    backgroundMusic.currentTime = localStorage.getItem("MusicTime");
+}else{
+    localStorage.setItem("MusicTime",0);
+}
+
+fetch("https://persona-compendium.onrender.com/personas/", {
+    method: 'GET'
+})
+.then(result => result.json())
+.then(data => assignPersonas(data))
+.catch(error => console.error(error));
+
+backgroundMusic.play();
+
+toggleSound.addEventListener("click", () => {
+    soundEnabled = !soundEnabled;
+    const volumeIcon = document.getElementById("volumeIcon");
+
+    if (soundEnabled) {
+        backgroundMusic.play();
+        backgroundMusic.volume = 0.2;
+        hoverSound.volume = 0.5;
+        invalidSound.volume = 0.5;
+        personaHoverSound.volume = 0.1;
+        nextPageSound.volume = 0.2;
+        arcanaSound.volume = 0.2;
+        selectSound.volume = 0.2;
+        volumeIcon.innerText = "volume_up";
+        toggleSound.setAttribute("active","");
+        localStorage.setItem("SoundActive",JSON.stringify(true));
+    } else {
+        backgroundMusic.volume = 0;
+        hoverSound.volume = 0;
+        invalidSound.volume = 0;
+        personaHoverSound.volume = 0;
+        nextPageSound.volume = 0;
+        arcanaSound.volume = 0;
+        selectSound.volume = 0;
+        volumeIcon.innerText = "volume_off";
+        toggleSound.removeAttribute("active");
+        localStorage.setItem("SoundActive",JSON.stringify(false));
+    }
+});
+
+toggleSound.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+});
+
 
 previous.addEventListener("click", () => {
-    if (personaSizeStart > 0) {
-        if(personaSizeEnd == totalOfPersonas){
+    if (personaSizeStart > 0 && personasLoaded) {
+        firstSearched = false;
+        if(personaSizeEnd == totalOfPersonas - 1){
             personaSizeEnd = personaSizeStart + 13;
         }
         personaSizeStart -= 14;
@@ -28,6 +141,7 @@ previous.addEventListener("click", () => {
         nextPageSound.currentTime = 0;
         nextPageSound.play();
     }else{
+        invalidSound.currentTime = 0;
         invalidSound.play();
         previous.setAttribute("invalid","true");
         setTimeout(() => {
@@ -42,17 +156,19 @@ previous.addEventListener("mouseenter", () => {
 })
 
 next.addEventListener("click", () => {
-    if (personaSizeStart < totalOfPersonas - 13) {
+    if (personaSizeStart < totalOfPersonas - 13 && personasLoaded) {
+        firstSearched = false;
         personaSizeStart += 14;
         personaSizeEnd += 14;
-        if(personaSizeEnd > totalOfPersonas){
-            personaSizeEnd = totalOfPersonas;
+        if(personaSizeEnd >= totalOfPersonas){
+            personaSizeEnd = totalOfPersonas -1;
         }
         pageNumbers.innerText = (personaSizeStart + 1) + " - " + (personaSizeEnd + 1);
         obtainPersonas();
         nextPageSound.currentTime = 0;
         nextPageSound.play();
     }else{
+        invalidSound.currentTime = 0;
         invalidSound.play();
         next.setAttribute("invalid","true");
         setTimeout(() => {
@@ -64,23 +180,172 @@ next.addEventListener("click", () => {
 next.addEventListener("mouseenter", () => {
     hoverSound.currentTime = 0;
     hoverSound.play();
+});
+
+arcanaButton.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
 })
 
-obtainPersonas();
+arcanaButton.addEventListener("click", () => {
+    if(personasLoaded){
+        if(currentArcanaID == arcanaList.length - 1){
+            currentArcanaID = 0;
+        }else{
+            currentArcanaID++;
+        }
+    
+        arcanaButton.setAttribute("pressed","");
+        arcanaSound.currentTime = 0;
+        arcanaSound.play();
+        setTimeout(() => {
+            arcanaText.innerText = arcanaList[currentArcanaID];
+        }, 500);
+        setTimeout(() => {
+            arcanaButton.removeAttribute("pressed");
+            filterByArcana();
+        }, 1000);
+    }else{
+        invalidSound.currentTime = 0;
+        invalidSound.play();
+        arcanaButton.setAttribute("invalid","true");
+        setTimeout(() => {
+            arcanaButton.removeAttribute("invalid");
+        }, 200);
+    }
+});
+
+nameSearcher.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+})
+
+nameSearcher.addEventListener("change", () => {
+    if(personasLoaded){
+        firstSearched = true;
+        localStorage.setItem("PersonaName",nameSearcher.value);
+        filterByName();
+    }else{
+        invalidSound.currentTime = 0;
+        invalidSound.play();
+        nameSearcher.value = "";
+    }
+});
+
+nameSearcher
+
+function assignPersonas(data){
+    originalPersonaList = data;
+    originalPersonaList.sort((a, b) => {
+        if (a.name < b.name) {
+            return -1; 
+        }
+        if (a.name > b.name) {
+            return 1; 
+        }
+        return 0; 
+    });
+    personaList = originalPersonaList;
+    totalOfPersonas = personaList.length;
+    personasLoaded = true;
+    pageNumbers.innerText = 1 + " - " + 14;
+    obtainPersonas();
+}
+
+function filterByName(){
+    let name = localStorage.getItem("PersonaName").toLowerCase();
+    let filteredList = personaList.filter(persona => {
+        return persona.name.toLowerCase().includes(name);
+    });
+    if(firstSearched){
+        personaSizeStart = 0;
+        if(filteredList.length < 14){
+            personaSizeEnd = filteredList.length - 1;
+        }else{
+            personaSizeEnd = 13;
+        }
+    }else{
+        if(filteredList.length < 14){
+            personaSizeEnd = filteredList.length - 1;
+        }
+    }
+    
+    totalOfPersonas = filteredList.length;
+    pageNumbers.innerText = (personaSizeStart + 1) + " - " + (personaSizeEnd + 1);
+    displayPersonas(filteredList);
+}
+
+function filterByArcana(){
+    if(currentArcanaID != 0){
+        personaList = new Array(0);
+        personaSizeStart = 0;
+        if(arcanaList[currentArcanaID] != "DLC" && arcanaList[currentArcanaID] != "FAVORITE"){
+            originalPersonaList.forEach(persona => {
+                if(persona.arcana == arcanaList[currentArcanaID]){
+                    personaList.push(persona);
+                }
+            });
+            personaSizeEnd = personaList.length - 1;
+        }else{
+            if(arcanaList[currentArcanaID] == "DLC"){
+                originalPersonaList.forEach(persona => {
+                    if(persona.dlc == 1){
+                        personaList.push(persona);
+                    }
+                });
+            }else{
+                if(favoritePersonas.length > 0){
+                    originalPersonaList.forEach(persona => {
+                        if(favoritePersonas.includes(persona.id)){
+                            personaList.push(persona);
+                        }
+                    });
+                }
+            }
+
+            if(personaList.length < 14){
+                personaSizeEnd = personaList.length - 1;
+            }else{
+                personaSizeEnd = 13;
+            }
+        }
+        totalOfPersonas = personaList.length;
+    }else{
+        personaList = originalPersonaList;
+        personaSizeStart = 0;
+        personaSizeEnd = 13;
+        totalOfPersonas = personaList.length;
+    }
+
+    pageNumbers.innerText = (personaSizeStart + 1) + " - " + (personaSizeEnd + 1);
+    
+    obtainPersonas();
+}
 
 function obtainPersonas(){
-    fetch("https://persona-compendium.onrender.com/personas/", {
-        method: 'GET'
-    })
-    .then(result => result.json())
-    .then(data => displayPersonas(data))
-    .catch(error => console.error(error))
+    personaContainer.innerHTML = "";
+    personaContainer.appendChild(loader);
+    if(localStorage.getItem("PersonaName")){
+        filterByName();
+    }else{
+        displayPersonas(personaList);
+    }
 }
 
 function displayPersonas(personas){
-    personaContainer.innerHTML = "";
-    for(let i = personaSizeStart; i <= personaSizeEnd; i++){
-        createPersona(personas[i]);
+    if(personas.length == 0){
+        if(favoritePersonas.length == 0 && nameSearcher.value == ""){
+            personaContainer.innerHTML = "<h1 invalid>You don't have favorite Personas!</h1>";
+        }else{
+            personaContainer.innerHTML = "<h1 invalid>There is no Persona whith that name!</h1>";
+        }
+        invalidSound.currentTime = 0;
+        invalidSound.play();
+    }else{
+        personaContainer.innerHTML = "";
+        for(let i = personaSizeStart; i <= personaSizeEnd; i++){
+            createPersona(personas[i]);
+        }
     }
 }
 
@@ -147,6 +412,20 @@ function createPersona(persona){
     personaCard.addEventListener("mouseenter", () => {
         personaHoverSound.currentTime = 0;
         personaHoverSound.play();
+    })
+
+    personaCard.addEventListener("click", () => {
+        localStorage.setItem("SelectedPersona",persona.query);
+        selectSound.currentTime = 0;
+        selectSound.play();
+        cardTransition.style.display = "block";
+        cardTransition.removeAttribute("class");
+        backTransition.style.display = "block";
+        backTransition.removeAttribute("class");
+        setTimeout(() => {
+            localStorage.setItem("MusicTime",backgroundMusic.currentTime);
+            window.location.href = "persona.html";
+        }, 2000)
     })
 
     personaContainer.appendChild(personaCard);
