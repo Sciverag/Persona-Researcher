@@ -50,27 +50,9 @@ if(localStorage.getItem("FavoritePersonas")){
     localStorage.setItem("FavoritePersonas",JSON.stringify([]));
 }
 
-fetch("https://persona-compendium.onrender.com/personas/", {
-    method: 'GET'
-})
-.then(result => result.json())
-.then(data => assignPersonas(data))
-.catch(error => console.error(error));
-
-backgroundMusic.volume = 0;
-hoverSound.volume = 0;
-invalidSound.volume = 0;
-personaHoverSound.volume = 0;
-nextPageSound.volume = 0;
-arcanaSound.volume = 0;
-selectSound.volume = 0;
-
-toggleSound.addEventListener("click", () => {
-    soundEnabled = !soundEnabled;
-    const volumeIcon = document.getElementById("volumeIcon");
-
+if(localStorage.getItem("SoundActive")){
+    soundEnabled = JSON.parse(localStorage.getItem("SoundActive"));
     if (soundEnabled) {
-        backgroundMusic.play();
         backgroundMusic.volume = 0.2;
         hoverSound.volume = 0.5;
         invalidSound.volume = 0.5;
@@ -90,6 +72,53 @@ toggleSound.addEventListener("click", () => {
         selectSound.volume = 0;
         volumeIcon.innerText = "volume_off";
         toggleSound.removeAttribute("active");
+    }
+}else{
+    localStorage.setItem("SoundActive",JSON.stringify(false));
+}
+
+if(localStorage.getItem("MusicTime")){
+    backgroundMusic.currentTime = localStorage.getItem("MusicTime");
+}else{
+    localStorage.setItem("MusicTime",0);
+}
+
+fetch("https://persona-compendium.onrender.com/personas/", {
+    method: 'GET'
+})
+.then(result => result.json())
+.then(data => assignPersonas(data))
+.catch(error => console.error(error));
+
+backgroundMusic.play();
+
+toggleSound.addEventListener("click", () => {
+    soundEnabled = !soundEnabled;
+    const volumeIcon = document.getElementById("volumeIcon");
+
+    if (soundEnabled) {
+        backgroundMusic.play();
+        backgroundMusic.volume = 0.2;
+        hoverSound.volume = 0.5;
+        invalidSound.volume = 0.5;
+        personaHoverSound.volume = 0.1;
+        nextPageSound.volume = 0.2;
+        arcanaSound.volume = 0.2;
+        selectSound.volume = 0.2;
+        volumeIcon.innerText = "volume_up";
+        toggleSound.setAttribute("active","");
+        localStorage.setItem("SoundActive",JSON.stringify(true));
+    } else {
+        backgroundMusic.volume = 0;
+        hoverSound.volume = 0;
+        invalidSound.volume = 0;
+        personaHoverSound.volume = 0;
+        nextPageSound.volume = 0;
+        arcanaSound.volume = 0;
+        selectSound.volume = 0;
+        volumeIcon.innerText = "volume_off";
+        toggleSound.removeAttribute("active");
+        localStorage.setItem("SoundActive",JSON.stringify(false));
     }
 });
 
@@ -394,6 +423,7 @@ function createPersona(persona){
         backTransition.style.display = "block";
         backTransition.removeAttribute("class");
         setTimeout(() => {
+            localStorage.setItem("MusicTime",backgroundMusic.currentTime);
             window.location.href = "persona.html";
         }, 2000)
     })
