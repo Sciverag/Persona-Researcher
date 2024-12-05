@@ -948,7 +948,7 @@ progress[value]:hover::-webkit-progress-value{
 
 #favoriteButton[active] > span {
   background-image: radial-gradient(rgb(255, 0, 106) 10%, rgb(255, 126, 148) 90%);
-  animation: favorite 2s linear infinite alternate;
+  animation: favorite 0.5s ease-in-out infinite alternate;
 }
 
 @keyframes favorite {
@@ -961,4 +961,137 @@ progress[value]:hover::-webkit-progress-value{
     scale: 105%;
     filter: brightness(100%) drop-shadow(0px 0px 5px rgb(10, 19, 72));
   }
+}
+
+#fusionButton {
+  position: absolute;
+  bottom: 10%;
+  left: 40%;
+  transform: rotate(-6deg);
+  background-color: rgb(46, 67, 250);
+  text-decoration: none;
+  color: whitesmoke;
+  font-weight: bold;
+  font-size: 40px;
+  padding: 0.5%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgb(0, 0, 109);
+  transition: all 0.2s;
+}
+
+#fusionButton:hover {
+  scale: 110%;
+  background-color: rgb(106, 235, 0);
+  color: black;
+}
+
+#arcanaImage {
+  width: 50px;
+  height: 70px;
+  position: absolute;
+  top: 10.5%;
+  left: 12.5%;
+  rotate: -20deg;
+  box-shadow: 0px 0px 10px rgb(0, 153, 255);
+  z-index: 2;
+  background-size: contain;
+  background-position: center;
+  transition: all 0.2s;
+}
+
+#arcanaImage:hover {
+  animation: arcanaCard 5s linear infinite alternate;
+}
+
+@keyframes arcanaCard {
+  0% {transform: rotateY(0deg);}
+  100% {transform: rotateY(360deg); }
+}
+
+#arcanaImage[Fool]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/5/53/Fool-0.png/revision/latest?cb=20160404201043);
+}
+
+#arcanaImage[Magician]{
+  background-image: url(https://i.pinimg.com/originals/0a/65/85/0a65858c0dd8be86e62c1229a15a2b5f.png);
+}
+
+#arcanaImage[Priestess]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/a/ad/Priestess-0.png/revision/latest?cb=20160404201724);
+}
+
+#arcanaImage[Empress]{
+  background-image: url(https://i.pinimg.com/originals/1e/ca/f8/1ecaf81b18e473c8953bf7ecae7f937b.png);
+}
+
+#arcanaImage[Emperor]{
+  background-image: url(https://i.pinimg.com/originals/ba/3a/a9/ba3aa9453afb0144aa1b032ef60750a5.jpg);
+}
+
+#arcanaImage[Hierophant]{
+  background-image: url(https://i.pinimg.com/originals/6a/a0/ec/6aa0ec318694e075c5ef227501d75302.png);
+}
+
+#arcanaImage[Lovers]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/a/a5/Lovers-0.png/revision/latest?cb=20160404202019);
+}
+
+#arcanaImage[Chariot]{
+  background-image: url(https://i.pinimg.com/originals/92/12/c3/9212c30b6cec1178fb681bf1f24f48c8.png);
+}
+
+#arcanaImage[Justice]{
+  background-image: url(https://i.pinimg.com/originals/ff/62/0c/ff620c777a9cad6903569a80e0b2f509.png);
+}
+
+#arcanaImage[Hermit]{
+  background-image: url(https://i.pinimg.com/originals/e1/a1/91/e1a19107faaf5386de6226a9555f3b8a.png);
+}
+
+#arcanaImage[Fortune]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr732-f15d882e-4f60-45e0-a9cd-9b964bf923d6.png/v1/fill/w_753,h_1061,strp/persona_3_4_tarot_card_deck_hr___fortune_arcana_by_enetirnel_d6xr732-pre.png);
+}
+
+#arcanaImage[Strength]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr6y8-941b82dc-51ca-4fbb-9e2a-1101d43c3e45.png/v1/fill/w_753,h_1061,q_70,strp/persona_3_tarot_card_deck_hr___strength_arcana_by_enetirnel_d6xr6y8-pre.jpg);
+}
+
+#arcanaImage[Hanged]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr6uh-485c5d04-8886-4aa2-a528-1dff9361b30a.png/v1/fill/w_753,h_1061,q_70,strp/persona_3_4_tarot_card_deck_hr___hanged_man_arcana_by_enetirnel_d6xr6uh-pre.jpg);
+}
+
+#arcanaImage[Death]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/d/df/Death-0.png/revision/latest?cb=20160404202413);
+}
+
+#arcanaImage[Temperance]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr6ol-7d2726d1-2d96-4fbe-93b9-304ea74920bd.png/v1/fill/w_753,h_1061,q_70,strp/persona_3_4_tarot_card_deck_hr___temperance_arcana_by_enetirnel_d6xr6ol-pre.jpg);
+}
+
+#arcanaImage[Devil]{
+  background-image: url(https://i.pinimg.com/originals/91/7c/dd/917cddeaf7aadc30956a22866a441d00.jpg);
+}
+
+#arcanaImage[Tower]{
+  background-image: url(https://vignette.wikia.nocookie.net/megamitensei/images/1/1f/Tower-0.png/revision/latest/scale-to-width-down/340?cb=20160404202557);
+}
+
+#arcanaImage[Star]{
+  background-image: url(https://i.pinimg.com/originals/98/e5/43/98e543777f851b560561472cff1d86d0.png);
+}
+
+#arcanaImage[Moon]{
+  background-image: url(https://i.pinimg.com/originals/b3/86/5f/b3865ff42cb06800f6c79e34ba4831e0.png);
+}
+
+#arcanaImage[Sun]{
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/intermediary/f/12278ed6-fd12-4a60-bd0b-e8540ed08fc2/d6xr6ln-abe3aba0-577c-49d1-935b-f715a7d64deb.png/v1/fill/w_753,h_1061,q_70,strp/persona_3_4_tarot_card_deck_hr___the_sun_arcana_by_enetirnel_d6xr6ln-pre.jpg);
+}
+
+#arcanaImage[Judgement]{
+  background-image: url(https://i.pinimg.com/originals/fa/64/11/fa641127bc02de160f00ae2fc4bf8ee1.png);
+}
+
+#arcanaImage[Aeon]{
+  background-image: url(https://i.pinimg.com/originals/e7/ec/a1/e7eca1a46cd1ff9c290926d66bac7b19.png);
 }

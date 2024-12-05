@@ -11,6 +11,8 @@ const agility = document.getElementById("agility");
 const luck = document.getElementById("luck");
 const dContainer = document.getElementById("descriptionContainer");
 const description = document.createElement("p");
+const fusionButton = document.getElementById("fusionButton");
+const arcanaImage = document.getElementById("arcanaImage");
 description.setAttribute("id","description");
 const cardTransition = document.getElementById("cardTransition");
 const backTransition = document.getElementById("backTransition");
@@ -93,6 +95,21 @@ if(localStorage.getItem("SelectedPersona")){
 
 backgroundMusic.play();
 
+favoriteButton.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+});
+
+fusionButton.addEventListener("mouseenter",() => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+});
+
+fusionButton.addEventListener("click", () => {
+    selectSound.currentTime = 0;
+    selectSound.play();
+})
+
 favoriteButton.addEventListener("click", () => {
     if(personasLoaded){
         if(isFavorite){
@@ -107,6 +124,9 @@ favoriteButton.addEventListener("click", () => {
                 favoritePersonas.push(selectedPersona.id);
             }
         }
+
+        selectSound.currentTime = 0;
+        selectSound.play();
     
         localStorage.setItem("FavoritePersonas",JSON.stringify(favoritePersonas));
     }else{
@@ -276,6 +296,9 @@ function showInfo(){
     })
 
     description.innerHTML = selectedPersona.description;
+
+    fusionButton.setAttribute("href","https://aqiu384.github.io/megaten-fusion-tool/p3r/personas/"+selectedPersona.name+"/fissions");
+    arcanaImage.setAttribute(selectedPersona.arcana,"");
 
     strength.setAttribute("value",selectedPersona.strength);
     document.getElementById("strengthNumber").innerText = addZero(selectedPersona.strength);
