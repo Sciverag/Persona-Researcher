@@ -138,6 +138,10 @@ body {
   animation: spin 1s linear;
 }
 
+#arcanaSelector:has(#central[pressedReverse]){
+  animation: spin 1s linear reverse;
+}
+
 #selectorBackground {
   position: fixed;
   width: 340px;
