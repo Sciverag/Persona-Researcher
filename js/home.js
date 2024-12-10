@@ -215,6 +215,35 @@ arcanaButton.addEventListener("click", () => {
     }
 });
 
+arcanaButton.addEventListener("contextmenu", (ev) => {
+    ev.preventDefault();
+    if(personasLoaded){
+        if(currentArcanaID == 0){
+            currentArcanaID = arcanaList.length - 1;
+        }else{
+            currentArcanaID--;
+        }
+    
+        arcanaButton.setAttribute("pressedReverse","");
+        arcanaSound.currentTime = 0;
+        arcanaSound.play();
+        setTimeout(() => {
+            arcanaText.innerText = arcanaList[currentArcanaID];
+        }, 500);
+        setTimeout(() => {
+            arcanaButton.removeAttribute("pressedReverse");
+            filterByArcana();
+        }, 1000);
+    }else{
+        invalidSound.currentTime = 0;
+        invalidSound.play();
+        arcanaButton.setAttribute("invalid","true");
+        setTimeout(() => {
+            arcanaButton.removeAttribute("invalid");
+        }, 200);
+    }
+});
+
 nameSearcher.addEventListener("mouseenter", () => {
     hoverSound.currentTime = 0;
     hoverSound.play();
